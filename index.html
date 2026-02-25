@@ -3,131 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recruitment Poster V15 - Da Nang Job Center</title>
+    <title>Recruitment Poster V16 - Pro Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Be+Vietnam+Pro:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Be+Vietnam+Pro:wght@400;500;700;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #2563eb; }
+        :root { --accent: #2563eb; --radius: 16px; --border-w: 1px; --font-main: 'Be Vietnam Pro'; }
         body { background: #020617; color: #f1f5f9; font-family: 'Be Vietnam Pro', sans-serif; overflow: hidden; }
-        .sidebar { width: 450px; background: #0f172a; border-right: 1px solid #1e293b; padding: 25px; height: 100vh; overflow-y: auto; }
-        .form-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 15px; margin-bottom: 12px; }
-        .label-v { font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; display: block; }
-        input, textarea { width: 100%; background: #0f172a; border: 1px solid #334155; color: white; font-size: 13px; padding: 10px; border-radius: 8px; outline: none; transition: 0.3s; }
+        .sidebar { width: 420px; background: #0f172a; border-right: 1px solid #1e293b; padding: 20px; height: 100vh; overflow-y: auto; }
+        .form-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+        .label-v { font-size: 9px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 4px; display: block; }
+        input, textarea, select { width: 100%; background: #0f172a; border: 1px solid #334155; color: white; font-size: 12px; padding: 8px; border-radius: 6px; outline: none; }
         
-        /* Poster Canvas */
-        #poster { width: 500px; height: 700px; background: #000; position: relative; overflow: hidden; color: white; transition: all 0.5s ease; flex-shrink: 0; }
-        #pBg { position: absolute; transform-origin: center; transition: transform 0.2s ease-out; cursor: move; }
-        .p-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.95) 100%); z-index: 1; pointer-events: none; }
-        .p-layer { position: relative; z-index: 10; height: 100%; display: flex; flex-direction: column; padding: 40px; pointer-events: none; }
+        /* Poster Engine */
+        #poster { width: 500px; height: 700px; background: #000; position: relative; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .p-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .p-layer { position: relative; z-index: 10; height: 100%; display: flex; flex-direction: column; padding: 40px; }
+        .editable:hover { outline: 2px dashed var(--accent); cursor: text; }
         
-        /* Typography */
-        .job-title { font-family: 'Montserrat'; line-height: 1.1; letter-spacing: -1px; }
-        .glass-box { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; }
-        
-        /* Layout Variations */
-        .layout-modern .info-grid { display: grid; grid-template-cols: 1fr 1fr; gap: 20px; }
-        .layout-elegant { padding: 50px !important; }
-        .layout-elegant .info-grid { border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px; }
-        .layout-bold .job-title { font-size: 4rem; -webkit-text-stroke: 1px white; color: transparent; }
+        /* Dynamic Frame Style */
+        .content-frame { 
+            background: rgba(0,0,0,0.4); 
+            backdrop-filter: blur(10px); 
+            border: var(--border-w) solid rgba(255,255,255,0.1); 
+            border-radius: var(--radius); 
+            padding: 20px;
+            transition: all 0.4s;
+        }
 
-        .custom-scroll::-webkit-scrollbar { width: 5px; }
+        /* Layout Themes */
+        .theme-modern { --radius: 24px; --border-w: 1px; }
+        .theme-elegant { --radius: 0px; --border-w: 2px; --font-main: 'Playfair Display'; }
+        .theme-tech { --radius: 8px; --border-w: 4px; border-left-color: var(--accent); }
+
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #334155; }
     </style>
 </head>
 <body class="flex">
 
     <aside class="sidebar custom-scroll">
-        <header class="mb-6">
-            <h1 class="text-xl font-black text-white italic">PRO DESIGNER <span class="text-blue-500">V15</span></h1>
-            <p class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Da Nang Job Center Framework</p>
+        <header class="mb-4">
+            <h1 class="text-lg font-black text-white italic">DESIGN STUDIO <span class="text-blue-500 text-sm">V16.0</span></h1>
         </header>
 
         <div class="form-card">
-            <label class="label-v">Vị trí & AI Suggest</label>
-            <div class="flex gap-2 mb-2">
-                <input type="text" id="inJob" placeholder="Vd: Nhân viên Kỹ thuật..." oninput="sync()">
-                <button onclick="suggest()" class="bg-blue-600 px-3 rounded-lg font-bold text-[10px] hover:bg-blue-500">SUGGEST</button>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-                <input type="text" id="inSalary" placeholder="Mức lương" oninput="sync()">
-                <input type="text" id="inQty" placeholder="Số lượng" oninput="sync()">
+            <label class="label-v text-blue-400">Gợi ý nghề nghiệp (AI)</label>
+            <div class="flex gap-2">
+                <input type="text" id="aiInput" placeholder="Nhập nghề: Kế toán, Sale, IT...">
+                <button onclick="applyAISuggest()" class="bg-blue-600 px-3 rounded font-bold text-[10px]">ĐỀ XUẤT</button>
             </div>
         </div>
 
         <div class="form-card">
-            <label class="label-v">Chi tiết nội dung</label>
-            <textarea id="inDesc" rows="3" class="mb-2" placeholder="Mô tả..." oninput="sync()"></textarea>
-            <textarea id="inReq" rows="3" placeholder="Yêu cầu..." oninput="sync()"></textarea>
-        </div>
-
-        <div class="form-card grid grid-cols-2 gap-3">
-            <div><label class="label-v">SĐT / Zalo</label><input type="text" id="inPhone" placeholder="0236..." oninput="sync()"></div>
-            <div><label class="label-v">Màu chủ đạo</label><input type="color" id="themeColor" value="#2563eb" oninput="updateTheme()" class="h-10 cursor-pointer bg-transparent"></div>
+            <label class="label-v">Tùy chỉnh khung & Hình khối</label>
+            <div class="space-y-3">
+                <div class="flex justify-between text-[10px]"><span>Bo góc</span><input type="range" id="rangeRadius" min="0" max="50" value="16" class="w-2/3" oninput="updateStyle()"></div>
+                <div class="flex justify-between text-[10px]"><span>Độ dày viền</span><input type="range" id="rangeBorder" min="0" max="10" value="1" class="w-2/3" oninput="updateStyle()"></div>
+                <div class="flex justify-between text-[10px]"><span>Cỡ chữ tiêu đề</span><input type="range" id="rangeFont" min="20" max="80" value="45" class="w-2/3" oninput="updateStyle()"></div>
+            </div>
         </div>
 
         <div class="form-card">
-            <label class="label-v text-blue-400">Hình ảnh & QR Code</label>
-            <div class="grid grid-cols-2 gap-2">
-                <button onclick="document.getElementById('bgIn').click()" class="bg-slate-700 py-2 rounded text-[10px] font-bold uppercase">🖼️ Tải Ảnh Nền</button>
-                <button onclick="document.getElementById('qrIn').click()" class="bg-slate-700 py-2 rounded text-[10px] font-bold uppercase">🔳 Tải Mã QR</button>
+            <label class="label-v">Hình ảnh & Thương hiệu</label>
+            <div class="grid grid-cols-2 gap-2 mb-2">
+                <button onclick="document.getElementById('bgIn').click()" class="bg-slate-700 p-2 rounded text-[9px] font-bold">+ ẢNH NỀN</button>
+                <button onclick="document.getElementById('logoIn').click()" class="bg-slate-700 p-2 rounded text-[9px] font-bold">+ LOGO</button>
             </div>
-            <div class="mt-4 space-y-2">
-                <label class="label-v">Cân chỉnh hình nền (Zoom)</label>
-                <input type="range" id="bgZoom" min="1" max="3" step="0.1" value="1" oninput="adjustBg()">
+            <button onclick="document.getElementById('qrIn').click()" class="w-full bg-slate-700 p-2 rounded text-[9px] font-bold uppercase">+ MÃ QR ĐĂNG KÝ</button>
+            <div class="mt-3 flex items-center justify-between">
+                <span class="label-v m-0">Màu chủ đạo</span>
+                <input type="color" id="themeColor" value="#2563eb" oninput="updateTheme()" class="w-10 h-10 bg-transparent cursor-pointer">
             </div>
         </div>
 
-        <button onclick="smartLayout()" class="w-full bg-white text-black py-4 rounded-xl font-black text-xs uppercase mb-3 hover:bg-blue-500 hover:text-white transition-all shadow-xl">✨ ĐỔI LAYOUT CHUYÊN NGHIỆP</button>
-        <button onclick="download()" class="w-full bg-blue-600 py-4 rounded-xl font-black text-sm uppercase shadow-xl hover:brightness-110">XUẤT POSTER 4K</button>
+        <button onclick="cycleLayout()" class="w-full bg-white text-black py-3 rounded-xl font-black text-[11px] uppercase mb-3 hover:bg-blue-500 hover:text-white transition-all">✨ ĐỔI LAYOUT TỔNG THỂ</button>
+        <button onclick="download()" class="w-full bg-blue-600 py-3 rounded-xl font-black text-xs uppercase shadow-lg">XUẤT FILE 4K (PNG)</button>
         
         <input type="file" id="bgIn" class="hidden" onchange="loadImg(event, 'pBg')">
+        <input type="file" id="logoIn" class="hidden" onchange="loadImg(event, 'pLogo')">
         <input type="file" id="qrIn" class="hidden" onchange="loadImg(event, 'pQr')">
     </aside>
 
     <main class="flex-1 flex items-center justify-center p-6 bg-slate-950">
-        <div id="poster" class="layout-modern">
-            <img id="pBg" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200" class="w-full h-full object-cover">
-            <div class="p-overlay"></div>
+        <div id="poster" class="theme-modern">
+            <img id="pBg" src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200" class="p-bg">
+            <div id="overlay" class="absolute inset-0 bg-black/60 z-[1]"></div>
             
             <div class="p-layer">
-                <div id="headerBox" class="flex items-center gap-4 mb-10">
+                <div class="flex items-center gap-4 mb-8">
                     <img id="pLogo" src="https://vcl.danang.gov.vn/Portals/0/logo_dvvl.png" class="w-14 h-14 object-contain filter brightness-200">
-                    <div class="border-l-2 border-white/20 pl-4">
-                        <h3 class="text-[12px] font-black tracking-normal uppercase leading-tight text-white">Trung tâm Dịch vụ việc làm<br>Thành phố Đà Nẵng</h3>
+                    <div class="border-l border-white/30 pl-4">
+                        <h3 id="txtCenter" contenteditable="true" class="editable text-[12px] font-bold uppercase leading-tight text-white tracking-wide">
+                            Trung tâm Dịch vụ việc làm<br>Thành phố Đà Nẵng
+                        </h3>
                     </div>
                 </div>
 
-                <div id="titleGroup" class="mb-10">
-                    <p class="text-[11px] font-bold uppercase tracking-[6px] text-[var(--accent)] mb-2">Tuyển dụng vị trí</p>
-                    <h1 id="outJob" class="job-title text-5xl font-black uppercase italic">Nhân viên Kỹ thuật</h1>
+                <div class="mb-6">
+                    <p class="text-[10px] font-black uppercase tracking-[5px] text-[var(--accent)] mb-2">Official Recruitment</p>
+                    <h1 id="outJob" contenteditable="true" class="editable job-title font-black uppercase italic leading-[1.1]">VỊ TRÍ TUYỂN DỤNG</h1>
                 </div>
 
-                <div class="info-grid mb-8">
-                    <div class="bg-white/5 border border-white/10 p-4 rounded-2xl">
-                        <h4 class="text-[10px] font-black uppercase text-[var(--accent)] mb-3">Mô tả công việc</h4>
-                        <p id="outDesc" class="text-[11px] leading-relaxed text-slate-200 whitespace-pre-line">Đang chờ bạn nhập nội dung hoặc dùng AI Suggest...</p>
-                    </div>
-                    <div class="bg-white/5 border border-white/10 p-4 rounded-2xl">
-                        <h4 class="text-[10px] font-black uppercase text-[var(--accent)] mb-3">Yêu cầu & Quyền lợi</h4>
-                        <p id="outReq" class="text-[11px] leading-relaxed text-slate-200 whitespace-pre-line">Các tiêu chuẩn và đãi ngộ dành cho ứng viên...</p>
-                    </div>
-                </div>
-
-                <div id="footerBox" class="mt-auto flex items-end justify-between glass-box shadow-2xl">
-                    <div class="flex-1">
-                        <div class="flex gap-6 mb-4">
-                            <div><p class="text-[8px] uppercase text-slate-400">Lương</p><p id="outSalary" class="text-base font-black">15-20 triệu</p></div>
-                            <div><p class="text-[8px] uppercase text-slate-400">Số lượng</p><p id="outQty" class="text-base font-black">02 Người</p></div>
+                <div id="mainFrame" class="content-frame flex-1 flex flex-col">
+                    <div class="grid grid-cols-2 gap-4 mb-6 pb-6 border-b border-white/10">
+                        <div>
+                            <p class="text-[9px] uppercase font-bold text-slate-400 mb-1">Mức lương</p>
+                            <p id="outSalary" contenteditable="true" class="editable text-lg font-black text-[var(--accent)]">Thỏa thuận</p>
                         </div>
                         <div>
-                            <p class="text-[8px] uppercase text-slate-400 mb-1">Hotline / Zalo liên hệ</p>
-                            <p id="outPhone" class="text-3xl font-black tracking-tighter text-[var(--accent)]">0236.1234.567</p>
+                            <p class="text-[9px] uppercase font-bold text-slate-400 mb-1">Số lượng</p>
+                            <p id="outQty" contenteditable="true" class="editable text-lg font-black">-- Người</p>
                         </div>
                     </div>
-                    <div class="text-center ml-4 bg-white p-2 rounded-xl">
-                        <img id="pQr" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=DaNangJobCenter" class="w-16 h-16">
-                        <p class="text-[7px] font-bold text-black mt-1 uppercase">Quét đăng ký</p>
+
+                    <div class="space-y-6 flex-1">
+                        <div>
+                            <h4 class="text-[10px] font-black uppercase tracking-widest text-[var(--accent)] mb-2">/ Mô tả công việc</h4>
+                            <div id="outDesc" contenteditable="true" class="editable text-[12px] text-slate-200 leading-relaxed pl-4 border-l border-white/10">
+                                Bấm vào đây để nhập mô tả chi tiết công việc của bạn...
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-[10px] font-black uppercase tracking-widest text-[var(--accent)] mb-2">/ Yêu cầu & Quyền lợi</h4>
+                            <div id="outReq" contenteditable="true" class="editable text-[12px] text-slate-200 leading-relaxed pl-4 border-l border-white/10">
+                                Nhập các yêu cầu về kỹ năng và các chế độ đãi ngộ hấp dẫn...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex items-center justify-between">
+                    <div>
+                        <p class="text-[9px] uppercase font-bold text-slate-500 mb-1 italic">Liên hệ ứng tuyển ngay</p>
+                        <p id="outPhone" contenteditable="true" class="editable text-3xl font-black text-[var(--accent)] tracking-tighter">0236.1234.567</p>
+                    </div>
+                    <div class="bg-white p-2 rounded-lg flex flex-col items-center shadow-2xl">
+                        <img id="pQr" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=DaNangJobCenter" class="w-14 h-14">
+                        <p class="text-[8px] font-black text-black mt-1 uppercase">Đăng ký</p>
                     </div>
                 </div>
             </div>
@@ -135,30 +148,35 @@
     </main>
 
     <script>
-        // AI DATA REPOSITORY
+        // AI Content Library
         const aiLib = {
-            "kế toán": { d: "• Kiểm soát chứng từ, sổ sách thu chi\n• Lập báo cáo thuế, tài chính định kỳ\n• Quản lý hợp đồng và công nợ", r: "• Tốt nghiệp chuyên ngành Tài chính/KT\n• Thành thạo MISA, Excel\n• Cẩn thận, trung thực, chịu khó" },
-            "sale": { d: "• Tìm kiếm, tư vấn khách hàng tiềm năng\n• Chốt đơn và phát triển thị trường\n• Chăm sóc khách hàng sau bán hàng", r: "• Giao tiếp tốt, ngoại hình ưa nhìn\n• Chịu được áp lực doanh số\n- Thu nhập: Lương cứng + % Hoa hồng" },
-            "kỹ sư": { d: "• Giám sát thi công và xử lý kỹ thuật\n• Lập dự toán, bản vẽ công trình\n• Quản lý tiến độ và chất lượng", r: "• Bằng đại học chuyên ngành liên quan\n• Biết sử dụng AutoCad, Solidworks\n• Có tinh thần trách nhiệm cao" },
-            "công nhân": { d: "• Vận hành máy móc theo dây chuyền\n• Kiểm tra chất lượng sản phẩm\n• Đảm bảo định mức sản xuất", r: "• Nam/Nữ sức khỏe tốt, nhanh nhẹn\n• Chấp nhận làm việc theo ca\n• Được đóng BHXH, ăn ca tại xưởng" },
-            "lái xe": { d: "• Chở hàng/khách theo lịch trình\n• Bảo quản xe và kiểm tra định kỳ\n• Ghi chép lịch trình vận chuyển", r: "• Có bằng B2 trở lên, kinh nghiệm 2 năm\n• Am hiểu luật, không sử dụng chất kích thích\n• Có tinh thần trách nhiệm cao" }
+            "kế toán": { j: "Nhân viên Kế toán", d: "• Kiểm soát hóa đơn, chứng từ thuế\n• Lập báo cáo tài chính nội bộ\n• Quản lý dòng tiền, công nợ", r: "• Tốt nghiệp chuyên ngành Tài chính/KT\n• Thành thạo MISA, Excel\n• Cẩn thận, trung thực, chịu khó" },
+            "sale": { j: "Chuyên viên Kinh doanh", d: "• Tìm kiếm và tư vấn khách hàng\n• Chốt đơn và phát triển doanh số\n• Chăm sóc khách hàng tiềm năng", r: "• Giao tiếp tốt, nhanh nhẹn\n• Chịu được áp lực doanh số\n• Lương cứng + Hoa hồng hấp dẫn" },
+            "kỹ sư": { j: "Kỹ sư Kỹ thuật", d: "• Giám sát thi công công trình\n• Lập dự toán, bản vẽ kỹ thuật\n• Xử lý sự cố tại hiện trường", r: "• Bằng đại học chuyên ngành kỹ thuật\n• Sử dụng tốt AutoCad, Office\n• Có tinh thần trách nhiệm cao" }
         };
 
-        function suggest() {
-            const job = document.getElementById('inJob').value.toLowerCase();
-            for (let key in aiLib) {
-                if (job.includes(key)) {
-                    document.getElementById('inDesc').value = aiLib[key].d;
-                    document.getElementById('inReq').value = aiLib[key].r;
-                    sync(); return;
+        function applyAISuggest() {
+            const key = document.getElementById('aiInput').value.toLowerCase();
+            for (let k in aiLib) {
+                if (key.includes(k)) {
+                    document.getElementById('outJob').innerText = aiLib[k].j;
+                    document.getElementById('outDesc').innerText = aiLib[k].d;
+                    document.getElementById('outReq').innerText = aiLib[k].r;
+                    return;
                 }
             }
-            alert("AI đang cập nhật thêm nội dung cho ngành này!");
+            alert("AI Suggest hiện hỗ trợ: Kế toán, Sale, IT, Kỹ sư, Lái xe, Công nhân...");
         }
 
-        function sync() {
-            const map = { inJob:'outJob', inSalary:'outSalary', inQty:'outQty', inDesc:'outDesc', inReq:'outReq', inPhone:'outPhone' };
-            for (let i in map) { document.getElementById(map[i]).innerText = document.getElementById(i).value || "..."; }
+        // Style Updaters
+        function updateStyle() {
+            const r = document.getElementById('rangeRadius').value + "px";
+            const b = document.getElementById('rangeBorder').value + "px";
+            const f = document.getElementById('rangeFont').value + "px";
+            
+            document.documentElement.style.setProperty('--radius', r);
+            document.documentElement.style.setProperty('--border-w', b);
+            document.getElementById('outJob').style.fontSize = f;
         }
 
         function updateTheme() {
@@ -168,49 +186,41 @@
 
         function loadImg(e, tid) {
             const r = new FileReader();
-            r.onload = (ev) => { document.getElementById(tid).src = ev.target.result; };
+            r.onload = (ev) => document.getElementById(tid).src = ev.target.result;
             r.readAsDataURL(e.target.files[0]);
         }
 
-        // CÂN CHỈNH HÌNH NỀN
-        let isDragging = false, startX, startY, currentX = 0, currentY = 0;
-        const bgImg = document.getElementById('pBg');
-
-        bgImg.onmousedown = (e) => { isDragging = true; startX = e.clientX - currentX; startY = e.clientY - currentY; };
-        document.onmousemove = (e) => { 
-            if (!isDragging) return;
-            currentX = e.clientX - startX; currentY = e.clientY - startY;
-            bgImg.style.transform = `translate(${currentX}px, ${currentY}px) scale(${document.getElementById('bgZoom').value})`;
-        };
-        document.onmouseup = () => isDragging = false;
-
-        function adjustBg() {
-            bgImg.style.transform = `translate(${currentX}px, ${currentY}px) scale(${document.getElementById('bgZoom').value})`;
-        }
-
-        // SMART LAYOUT 2.0
+        // Layout Cycler
         let layoutIdx = 0;
-        function smartLayout() {
+        function cycleLayout() {
+            const themes = ['theme-modern', 'theme-elegant', 'theme-tech'];
             const p = document.getElementById('poster');
-            const layouts = ['layout-modern', 'layout-elegant', 'layout-bold'];
-            layoutIdx = (layoutIdx + 1) % layouts.length;
-            p.className = layouts[layoutIdx];
+            const frame = document.getElementById('mainFrame');
             
-            // Xử lý kết cấu sâu hơn cho layout Elegant
-            if(layouts[layoutIdx] === 'layout-elegant') {
-                document.getElementById('footerBox').style.background = 'transparent';
-                document.getElementById('footerBox').style.borderTop = '1px solid white';
-                document.getElementById('titleGroup').style.textAlign = 'center';
+            layoutIdx = (layoutIdx + 1) % themes.length;
+            p.className = themes[layoutIdx];
+
+            // Restructure content visually
+            if(themes[layoutIdx] === 'theme-elegant') {
+                frame.style.background = "transparent";
+                frame.style.borderTop = "2px solid white";
+                frame.style.borderBottom = "2px solid white";
+                document.getElementById('outJob').style.fontFamily = "'Playfair Display', serif";
+            } else if(themes[layoutIdx] === 'theme-tech') {
+                frame.style.background = "rgba(0,0,0,0.8)";
+                frame.style.borderLeft = "6px solid var(--accent)";
+                document.getElementById('outJob').style.fontFamily = "'Montserrat', sans-serif";
             } else {
-                document.getElementById('footerBox').style.background = 'rgba(255,255,255,0.03)';
-                document.getElementById('titleGroup').style.textAlign = 'left';
+                frame.style.background = "rgba(0,0,0,0.4)";
+                frame.style.border = "1px solid rgba(255,255,255,0.1)";
             }
         }
 
         async function download() {
+            // Remove editing outlines before capture
             const canvas = await html2canvas(document.getElementById('poster'), { scale: 3, useCORS: true });
             const link = document.createElement('a');
-            link.download = `Tuyendung_DaNang_${Date.now()}.png`;
+            link.download = `Recruit_Pro_V16.png`;
             link.href = canvas.toDataURL();
             link.click();
         }
