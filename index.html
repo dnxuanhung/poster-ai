@@ -3,231 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Poster Pro V8 - Smart Translation</title>
+    <title>AI Studio V11 - Smart Content & Color</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Be+Vietnam+Pro:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Be+Vietnam+Pro:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --p-width: 420px; --p-height: 594px; }
+        :root { --theme: #3b82f6; }
         body { background: #020617; color: #f8fafc; font-family: 'Be Vietnam Pro', sans-serif; overflow: hidden; }
-        .poster-stage { width: var(--p-width); height: var(--p-height); background: #000; position: relative; overflow: hidden; box-shadow: 0 0 80px rgba(0,0,0,0.6); }
-        .layer-item { position: absolute; cursor: move; z-index: 10; user-select: none; border: 2px dashed transparent; }
-        .layer-item.active { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
-        .resizer { width: 12px; height: 12px; background: #3b82f6; position: absolute; right: -6px; bottom: -6px; border-radius: 50%; display: none; cursor: nwse-resize; border: 2px solid white; }
-        .active .resizer { display: block; }
-        .glass { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(15px); border: 1px solid rgba(51, 65, 85, 0.5); }
-        .btn-ai { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); transition: all 0.3s; }
-        .btn-ai:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4); }
-        .loader { border: 2px solid transparent; border-top: 2px solid #fff; border-radius: 50%; width: 14px; height: 14px; animation: spin 0.8s linear infinite; display: inline-block; margin-right: 8px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .glass { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(15px); border-right: 1px solid rgba(255,255,255,0.05); }
+        .poster-stage { width: 450px; height: 636px; background: #000; position: relative; overflow: hidden; transition: all 0.5s; }
+        input, textarea { background: #0f172a !important; border: 1px solid #1e293b !important; color: white !important; font-size: 11px !important; border-radius: 8px !important; padding: 10px !important; }
+        .label-s { font-size: 9px; text-transform: uppercase; color: #64748b; font-weight: 800; margin-bottom: 4px; display: block; }
+        .theme-text { color: var(--theme); transition: color 0.5s; }
+        .theme-bg { background-color: var(--theme); transition: background 0.5s; }
+        .theme-border { border-color: var(--theme); transition: border-color 0.5s; }
+        .custom-scroll::-webkit-scrollbar { width: 3px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; }
     </style>
 </head>
 <body class="flex h-screen">
 
-    <aside class="w-80 glass border-r p-6 flex flex-col gap-6 overflow-y-auto">
-        <div>
-            <h1 class="text-2xl font-black bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">AI STUDIO V8</h1>
-            <p class="text-[9px] text-slate-500 tracking-[0.2em] uppercase font-bold">Smart Translation Engine</p>
+    <aside class="w-[380px] glass p-5 flex flex-col h-full z-20">
+        <div class="mb-4">
+            <h1 class="text-xl font-black theme-text">AI DESIGN V11</h1>
+            <p class="text-[9px] text-slate-500 uppercase font-bold tracking-widest">Auto Content & Auto Color</p>
         </div>
 
-        <section class="space-y-4">
-            <div class="p-4 bg-white/5 rounded-2xl border border-white/10 space-y-4">
-                <header class="flex items-center gap-2 text-indigo-400">
-                    <span class="text-lg">🤖</span>
-                    <label class="text-[11px] font-black uppercase tracking-wider">AI Jobs-to-Image</label>
-                </header>
-
-                <div class="space-y-2">
-                    <span class="text-[10px] text-slate-400">Nhập vị trí tuyển dụng (Tiếng Việt):</span>
-                    <input type="text" id="jobInput" placeholder="Ví dụ: Kỹ sư phần mềm..." 
-                           class="w-full bg-black/50 border border-slate-700 p-3 rounded-xl text-xs outline-none focus:border-indigo-500">
+        <div class="flex-1 overflow-y-auto pr-2 custom-scroll space-y-4">
+            <section class="bg-blue-500/10 p-3 rounded-xl border border-blue-500/20">
+                <label class="label-s text-blue-400">Nhập vị trí để AI đề xuất nội dung</label>
+                <div class="flex gap-2">
+                    <input type="text" id="inJob" class="flex-1" placeholder="Vd: Kế toán, Nhân sự, IT..." oninput="updatePoster()">
+                    <button onclick="suggestContent()" class="theme-bg px-3 rounded-lg text-[10px] font-black uppercase">Đề xuất</button>
                 </div>
+            </section>
 
-                <button onclick="smartGenerateBackground()" id="btnGenerate" class="w-full btn-ai py-3 rounded-xl font-bold text-xs flex items-center justify-center">
-                    TỰ ĐỘNG SINH ẢNH
-                </button>
-                <div id="aiStatus" class="text-[9px] text-slate-500 text-center hidden">Đang dịch thuật và tìm kiếm...</div>
+            <div class="grid grid-cols-2 gap-2">
+                <div><label class="label-s">Mức lương</label><input type="text" id="inSalary" class="w-full" oninput="updatePoster()"></div>
+                <div><label class="label-s">Số lượng</label><input type="text" id="inQty" class="w-full" oninput="updatePoster()"></div>
             </div>
-        </section>
 
-        <section class="space-y-3">
-            <button onclick="addNewText('VỊ TRÍ MỚI', '24px', '900')" class="w-full bg-slate-800 p-3 rounded-xl text-xs hover:bg-slate-700 transition-all">+ Thêm văn bản</button>
-            <button onclick="downloadPoster()" class="w-full bg-emerald-600 py-4 rounded-xl font-black text-xs shadow-lg shadow-emerald-900/20 mt-4 uppercase tracking-widest">Xuất File 4K</button>
-        </section>
+            <div><label class="label-s">Mô tả công việc</label><textarea id="inDesc" class="w-full h-16" oninput="updatePoster()"></textarea></div>
+            <div><label class="label-s">Yêu cầu</label><textarea id="inReq" class="w-full h-16" oninput="updatePoster()"></textarea></div>
+            <div><label class="label-s">Quyền lợi</label><textarea id="inBenefit" class="w-full h-16" oninput="updatePoster()"></textarea></div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <div><label class="label-s">Tên đơn vị</label><input type="text" id="inCompany" class="w-full" oninput="updatePoster()"></div>
+                <div><label class="label-s">Hotline</label><input type="text" id="inPhone" class="w-full" oninput="updatePoster()"></div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-800">
+                <label class="label-s theme-text">🤖 Tìm hình nền & Tự phối màu</label>
+                <div class="flex gap-1">
+                    <input type="text" id="aiKey" class="flex-1" placeholder="Chủ đề ảnh...">
+                    <button onclick="generateAI()" class="bg-indigo-600 px-4 rounded-lg text-[10px] font-bold">GENERATE</button>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="download()" class="mt-4 w-full theme-bg py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110">Xuất Poster 4K</button>
     </aside>
 
-    <main class="flex-1 bg-[#050505] flex items-center justify-center p-10">
-        <div id="poster" class="poster-stage" onclick="deselectAll(event)">
-            <img id="mainBg" src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1200" 
-                 class="absolute inset-0 w-full h-full object-cover transition-all duration-1000" crossorigin="anonymous">
-            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
-            
-            <div id="jobLayer" class="layer-item text-center" style="top:250px; left:0; width:100%;">
-                <h2 id="jobDisplay" style="font-size:28px; color:white; font-weight:900; letter-spacing:1px; text-transform:uppercase;">Vị trí tuyển dụng</h2>
+    <main class="flex-1 bg-black flex items-center justify-center p-4">
+        <div id="poster" class="poster-stage">
+            <img id="pBg" src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000" class="absolute inset-0 w-full h-full object-cover opacity-60 transition-opacity duration-1000" crossorigin="anonymous">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+
+            <div class="relative z-10 p-10 h-full flex flex-col text-white">
+                <div id="outCompany" class="theme-text font-bold text-[10px] uppercase tracking-[4px] mb-1">Tên đơn vị của bạn</div>
+                <div class="h-0.5 w-10 theme-bg mb-8"></div>
+                
+                <h1 id="outJob" class="text-4xl font-black leading-[1.1] mb-2 uppercase" style="font-family: 'Montserrat'">VỊ TRÍ TUYỂN DỤNG</h1>
+                
+                <div class="flex gap-2 mb-8">
+                    <span class="theme-bg text-black text-[9px] font-black px-3 py-1 rounded-sm uppercase" id="outSalary">Thỏa thuận</span>
+                    <span class="bg-white/10 border border-white/20 text-white text-[9px] font-bold px-3 py-1 rounded-sm" id="outQty">-- Người</span>
+                </div>
+
+                <div class="space-y-4 flex-1">
+                    <div>
+                        <h4 class="text-[9px] font-black theme-text uppercase mb-1">▪ Mô tả công việc</h4>
+                        <p id="outDesc" class="text-[11px] text-slate-300 leading-relaxed pl-3 whitespace-pre-line">Đang chờ dữ liệu...</p>
+                    </div>
+                    <div>
+                        <h4 class="text-[9px] font-black theme-text uppercase mb-1">▪ Yêu cầu</h4>
+                        <p id="outReq" class="text-[11px] text-slate-300 leading-relaxed pl-3 whitespace-pre-line">Đang chờ dữ liệu...</p>
+                    </div>
+                    <div>
+                        <h4 class="text-[9px] font-black theme-text uppercase mb-1">▪ Quyền lợi</h4>
+                        <p id="outBenefit" class="text-[11px] text-slate-300 leading-relaxed pl-3 whitespace-pre-line">Đang chờ dữ liệu...</p>
+                    </div>
+                </div>
+
+                <div class="mt-auto pt-6 border-t border-white/10 flex justify-between items-end">
+                    <div class="text-right ml-auto">
+                        <p class="text-[8px] uppercase text-white/40 mb-1">Liên hệ ngay</p>
+                        <p id="outPhone" class="text-2xl font-black theme-text tracking-tighter">090.XXX.XXXX</p>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
-    <aside class="w-80 glass border-l p-6">
-        <div id="editor" class="hidden space-y-6">
-            <h3 class="text-[11px] font-black text-yellow-500 uppercase tracking-widest">Chỉnh sửa Layer</h3>
-            <textarea id="editTxt" class="w-full bg-black/50 border border-slate-700 p-3 rounded-xl text-xs outline-none focus:border-blue-500 min-h-[100px]"></textarea>
-            <div class="grid grid-cols-2 gap-4">
-                <input type="number" id="editSize" class="bg-black/50 border border-slate-700 p-2 rounded-lg text-xs">
-                <input type="color" id="editColor" class="w-full h-9 bg-transparent cursor-pointer">
-            </div>
-            <button onclick="deleteLayer()" class="w-full py-3 text-red-500 text-[10px] font-bold uppercase border border-red-500/20 rounded-xl hover:bg-red-500 hover:text-white transition-all">Xóa phần tử</button>
-        </div>
-        <div id="noSelect" class="text-center py-20 text-slate-600 italic text-xs">Hãy chọn một phần tử trên poster</div>
-    </aside>
-
     <script>
-        // 1. TỪ ĐIỂN DỊCH THUẬT THÔNG MINH (Có thể mở rộng thêm)
-        const jobDictionary = {
-            "kế toán": "professional modern accounting office with calculators and documents",
-            "kỹ sư": "construction site with engineer wearing helmet, blueprints, professional",
-            "phần mềm": "software developer workspace with multiple monitors and code, dark tech vibe",
-            "it": "modern data center server room with blue neon lights",
-            "marketing": "creative agency office with brainstorming whiteboards and colorful sticky notes",
-            "bán hàng": "modern luxury retail store interior, professional sales environment",
-            "giám đốc": "high-end luxury executive office, city view through window, cinematic",
-            "nhân sự": "professional interview room, people shaking hands, bright friendly office",
-            "đầu bếp": "professional restaurant kitchen with chefs cooking, motion blur, warm lighting",
-            "bác sĩ": "modern high-tech hospital corridor or medical clinic, clean professional",
-            "giáo viên": "modern classroom or library background, academic and bright"
+        // 1. DỮ LIỆU ĐỀ XUẤT NỘI DUNG (Mở rộng thoải mái)
+        const suggestions = {
+            "kế toán": { desc: "- Quản lý thu chi nội bộ\n- Lập báo cáo tài chính tháng/quý\n- Kiểm soát hóa đơn chứng từ", req: "- Tốt nghiệp chuyên ngành KT\n- Sử dụng thành thạo MISA/Excel\n- Trung thực, cẩn thận", ben: "- Lương thưởng tháng 13\n- Đóng BHXH đầy đủ\n- Nghỉ lễ theo quy định" },
+            "sale": { desc: "- Tìm kiếm khách hàng tiềm năng\n- Tư vấn sản phẩm & chốt hợp đồng\n- Chăm sóc khách hàng sau bán hàng", req: "- Giao tiếp tốt, tự tin\n- Có kinh nghiệm sale là lợi thế\n- Chịu được áp lực doanh số", ben: "- Hoa hồng hấp dẫn (3-10%)\n- Thưởng nóng theo tuần/tháng\n- Du lịch hàng năm cùng công ty" },
+            "it": { desc: "- Phát triển hệ thống Web/App\n- Bảo trì và xử lý lỗi hệ thống\n- Nghiên cứu công nghệ mới", req: "- Am hiểu JavaScript/React/NodeJS\n- Tư duy logic tốt\n- Đọc hiểu tài liệu tiếng Anh", ben: "- Lương Up-to 30M\n- Môi trường làm việc trẻ trung\n- Cấp máy tính cấu hình cao" }
         };
 
-        // 2. HÀM XỬ LÝ CHÍNH
-        async function smartGenerateBackground() {
-            const jobTitle = document.getElementById('jobInput').value.toLowerCase().trim();
-            const btn = document.getElementById('btnGenerate');
-            const status = document.getElementById('aiStatus');
-            const mainBg = document.getElementById('mainBg');
-            const jobDisplay = document.getElementById('jobDisplay');
-
-            if (!jobTitle) return alert("Vui lòng nhập vị trí công việc!");
-
-            // Cập nhật text lên Poster ngay lập tức
-            jobDisplay.innerText = jobTitle;
-
-            // Bật hiệu ứng loading
-            btn.disabled = true;
-            btn.innerHTML = `<span class="loader"></span> ĐANG XỬ LÝ...`;
-            status.classList.remove('hidden');
-
-            // Tìm kiếm trong từ điển, nếu không có thì dịch thô
-            let englishKeyword = "";
-            let found = false;
-            for (let key in jobDictionary) {
-                if (jobTitle.includes(key)) {
-                    englishKeyword = jobDictionary[key];
-                    found = true;
-                    break;
+        function suggestContent() {
+            const job = document.getElementById('inJob').value.toLowerCase();
+            for (let key in suggestions) {
+                if (job.includes(key)) {
+                    document.getElementById('inDesc').value = suggestions[key].desc;
+                    document.getElementById('inReq').value = suggestions[key].req;
+                    document.getElementById('inBenefit').value = suggestions[key].ben;
+                    updatePoster();
+                    return;
                 }
             }
-
-            // Nếu không có trong từ điển, tạo prompt mặc định
-            if (!found) {
-                englishKeyword = `${jobTitle} professional workplace environment, cinematic lighting, high resolution`;
-            }
-
-            // Gọi API sinh ảnh
-            const finalPrompt = encodeURIComponent(englishKeyword);
-            const imageUrl = `https://image.pollinations.ai/prompt/${finalPrompt}?width=1200&height=1600&nologo=true&seed=${Math.floor(Math.random()*9999)}`;
-
-            mainBg.style.filter = "brightness(0.2) blur(10px)";
-
-            const imgLoader = new Image();
-            imgLoader.crossOrigin = "anonymous";
-            imgLoader.src = imageUrl;
-
-            imgLoader.onload = () => {
-                mainBg.src = imageUrl;
-                mainBg.style.filter = "brightness(0.6) blur(0px)";
-                btn.disabled = false;
-                btn.innerHTML = `TỰ ĐỘNG SINH ẢNH`;
-                status.classList.add('hidden');
-            };
+            alert("Vị trí này chưa có mẫu sẵn, bạn hãy tự nhập nhé!");
         }
 
-        // --- CÁC HÀM CƠ BẢN ---
-        let activeLayer = null;
-        function initDraggable(el) {
-            let isDrag = false, isResize = false, sx, sy, sl, st, sw;
-            el.addEventListener('mousedown', e => {
-                e.stopPropagation(); setActive(el);
-                if(e.target.classList.contains('resizer')) isResize = true;
-                else isDrag = true;
-                sx = e.clientX; sy = e.clientY;
-                sl = el.offsetLeft; st = el.offsetTop; sw = el.offsetWidth;
+        // 2. TỰ PHỐI MÀU THÔNG MINH (Color Palette Engine)
+        const colorThemes = ["#3b82f6", "#ef4444", "#10b981", "#fbbf24", "#a855f7", "#ec4899", "#06b6d4"];
+        
+        function updatePoster() {
+            const ids = ['inJob','inQty','inSalary','inCompany','inPhone','inDesc','inReq','inBenefit'];
+            ids.forEach(id => {
+                const val = document.getElementById(id).value;
+                document.getElementById('out' + id.substring(2)).innerText = val || "...";
             });
-            document.addEventListener('mousemove', e => {
-                if(!isDrag && !isResize) return;
-                const dx = e.clientX - sx; const dy = e.clientY - sy;
-                if(isDrag) { el.style.left = sl + dx + 'px'; el.style.top = st + dy + 'px'; }
-                if(isResize) { el.style.width = sw + dx + 'px'; }
-            });
-            document.addEventListener('mouseup', () => { isDrag = isResize = false; });
         }
 
-        function setActive(el) {
-            deselectAll(); activeLayer = el;
-            el.classList.add('active');
-            document.getElementById('editor').classList.remove('hidden');
-            document.getElementById('noSelect').classList.add('hidden');
-            const target = el.querySelector('h1, h2, div:not(.resizer)') || el;
-            document.getElementById('editTxt').value = target.innerText;
-            document.getElementById('editSize').value = parseInt(window.getComputedStyle(target).fontSize);
+        async function generateAI() {
+            const key = document.getElementById('aiKey').value || document.getElementById('inJob').value || "Office";
+            const img = document.getElementById('pBg');
+            
+            // Xoay vòng màu theme mỗi lần đổi ảnh cho "hợp" vibe
+            const randomColor = colorThemes[Math.floor(Math.random() * colorThemes.length)];
+            document.documentElement.style.setProperty('--theme', randomColor);
+
+            img.style.opacity = "0";
+            const seed = Math.floor(Math.random() * 1000);
+            img.src = `https://image.pollinations.ai/prompt/${encodeURIComponent(key + ' professional cinematic photography')}?width=1000&height=1400&nologo=true&seed=${seed}`;
+            
+            img.onload = () => img.style.opacity = "0.6";
         }
 
-        function deselectAll(e) {
-            if(e && e.target.closest('.layer-item')) return;
-            document.querySelectorAll('.layer-item').forEach(l => l.classList.remove('active'));
-            activeLayer = null;
-            document.getElementById('editor').classList.add('hidden');
-            document.getElementById('noSelect').classList.remove('hidden');
-        }
-
-        function addNewText(txt, size, weight) {
-            const div = document.createElement('div');
-            div.className = 'layer-item';
-            div.style.top = '100px'; div.style.left = '50px'; div.style.width = '300px';
-            div.innerHTML = `<div style="font-size:${size}; font-weight:${weight}; color:white; text-align:center; font-family:'Montserrat'">${txt}</div><div class="resizer"></div>`;
-            document.getElementById('poster').appendChild(div);
-            initDraggable(div);
-            setActive(div);
-        }
-
-        document.getElementById('editTxt').oninput = (e) => {
-            if(!activeLayer) return;
-            const t = activeLayer.querySelector('h1, h2, div:not(.resizer)') || activeLayer;
-            t.innerText = e.target.value;
-        };
-
-        document.getElementById('editSize').oninput = (e) => {
-            if(!activeLayer) return;
-            const t = activeLayer.querySelector('h1, h2, div:not(.resizer)') || activeLayer;
-            t.style.fontSize = e.target.value + 'px';
-        };
-
-        document.getElementById('editColor').oninput = (e) => {
-            if(!activeLayer) return;
-            const t = activeLayer.querySelector('h1, h2, div:not(.resizer)') || activeLayer;
-            t.style.color = e.target.value;
-        };
-
-        function deleteLayer() { if(activeLayer) { activeLayer.remove(); deselectAll(); } }
-
-        async function downloadPoster() {
-            deselectAll();
+        async function download() {
             const canvas = await html2canvas(document.getElementById('poster'), { scale: 3, useCORS: true });
             const link = document.createElement('a');
-            link.download = `Poster_Professional.png`;
+            link.download = 'Poster_AI_V11.png';
             link.href = canvas.toDataURL();
             link.click();
         }
-
-        document.querySelectorAll('.layer-item').forEach(initDraggable);
     </script>
 </body>
 </html>
