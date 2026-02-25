@@ -3,389 +3,305 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Studio Poster Pro V4</title>
+    <title>AI DESIGN STUDIO V5.0 - CHUẨN ĐẦY ĐỦ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Playfair+Display:wght@900&family=Bangers&family=Dancing+Script:wght@700&family=Be+Vietnam+Pro:wght@400;700&family=Pacifico&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    
     <style>
         :root { --p-width: 450px; --p-height: 630px; }
-        body { background: #0f172a; color: #f8fafc; font-family: 'Be Vietnam Pro', sans-serif; overflow-x: hidden; }
+        body { background: #020617; color: #f8fafc; font-family: 'Be Vietnam Pro', sans-serif; }
         
-        /* Cấu trúc Canvas */
+        /* Canvas */
         .poster-canvas { 
             width: var(--p-width); height: var(--p-height); 
             background: #1e293b; position: relative; overflow: hidden;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5); border-radius: 8px; flex-shrink: 0;
+            box-shadow: 0 0 60px rgba(59, 130, 246, 0.25); border-radius: 12px;
         }
-
         .bg-layer { position: absolute; inset: 0; z-index: 0; }
-        .bg-layer img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6); transition: filter 0.3s; }
-        .overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.9)); z-index: 1; pointer-events: none; }
-
-        /* Các phần tử tương tác */
-        .editable-el { 
-            position: absolute; cursor: grab; z-index: 10; padding: 6px; 
-            border: 2px dashed transparent; transition: border 0.2s; box-sizing: border-box;
-        }
-        .editable-el:hover { border-color: rgba(255, 255, 255, 0.3); }
-        .editable-el.selected { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); border-radius: 6px; z-index: 20; }
-        .editable-el:active { cursor: grabbing; }
+        .bg-layer img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6); }
+        .overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.85)); z-index: 1; pointer-events: none; }
         
-        [contenteditable="true"] { outline: none; cursor: text; min-width: 50px; min-height: 20px; }
+        /* Phần tử có thể chỉnh sửa */
+        .editable-el { position: absolute; cursor: grab; z-index: 10; padding: 10px; border: 2px dashed transparent; min-width: 50px; }
+        .editable-el:hover { border-color: rgba(255, 255, 255, 0.4); }
+        .editable-el.selected { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); border-radius: 8px; z-index: 20; }
+        [contenteditable="true"] { outline: none; cursor: text; }
         
-        /* Hiệu ứng loading */
-        .loader { border: 4px solid #334155; border-top: 4px solid #3b82f6; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display: inline-block; }
+        /* Loading animation */
+        .loader { border: 3px solid #334155; border-top: 3px solid #3b82f6; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+        .font-item { transition: all 0.2s; border: 1px solid #1e293b; }
+        .font-item:hover { border-color: #3b82f6; background: #1e293b; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center p-4">
+<body class="min-h-screen flex flex-col items-center p-6">
 
-    <header class="w-full max-w-6xl mb-6 flex justify-between items-center bg-slate-900 p-4 rounded-2xl border border-slate-800">
+    <header class="w-full max-w-6xl mb-8 flex flex-wrap justify-between items-center bg-slate-900/90 p-6 rounded-3xl border border-slate-800 backdrop-blur-xl">
         <div>
-            <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">AI DESIGN STUDIO V4</h1>
-            <p class="text-xs text-slate-400">Tự động hóa toàn bộ nội dung & bố cục</p>
+            <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">AI DESIGN V5.0</h1>
+            <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-bold">The Complete Design Tool</p>
         </div>
-        <button onclick="downloadPoster()" class="bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition-all flex items-center gap-2">
-            📸 Xuất Ảnh
-        </button>
+        <button onclick="downloadPoster()" class="bg-indigo-600 hover:bg-indigo-500 px-8 py-3 rounded-2xl font-black shadow-lg shadow-indigo-500/20 transition-all text-sm">📸 XUẤT ẢNH 4K</button>
     </header>
 
-    <div class="flex flex-col lg:flex-row gap-6 w-full max-w-7xl justify-center items-start">
+    <div class="flex flex-col lg:flex-row gap-10 w-full max-w-7xl justify-center items-start">
         
-        <div class="w-full lg:w-80 flex flex-col gap-4">
-            <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl">
-                <h2 class="font-bold text-sm text-blue-400 mb-3 uppercase tracking-wider">1. Ý tưởng từ AI</h2>
-                <input type="text" id="aiJobInput" placeholder="Nhập vị trí (VD: Đầu bếp, Thợ mộc...)" 
-                       class="w-full bg-slate-950 border border-slate-600 p-3 rounded-xl text-sm focus:border-blue-500 outline-none text-white placeholder-slate-500 mb-3">
-                <button id="btnGenerate" onclick="generateTemplates()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 py-3 rounded-xl font-bold text-sm hover:opacity-90 transition-all flex justify-center items-center gap-2">
-                    ✨ TẠO 3 MẪU THIẾT KẾ
-                </button>
-                <div id="aiStatus" class="text-xs text-slate-400 mt-3 hidden text-center">Đang phân tích dữ liệu...</div>
+        <div class="w-full lg:w-80 space-y-6">
+            <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-xl">
+                <label class="text-[10px] font-black text-indigo-400 uppercase mb-3 block tracking-widest">1. Nhập vị trí tuyển dụng</label>
+                <input type="text" id="aiJobInput" placeholder="Ví dụ: Giám đốc Marketing, Shipper..." 
+                       class="w-full bg-black border border-slate-700 p-4 rounded-2xl text-sm focus:border-indigo-500 outline-none text-white mb-4">
+                <button id="btnGenerate" onclick="generateTemplates()" class="w-full bg-gradient-to-br from-indigo-600 to-blue-700 py-4 rounded-2xl font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-xl">✨ TẠO Ý TƯỞNG AI</button>
+                <div id="aiStatus" class="text-[10px] text-slate-500 mt-3 text-center italic font-medium">Hệ thống sẵn sàng</div>
             </div>
 
-            <div id="templateContainer" class="flex flex-col gap-3 hidden">
-                <h3 class="font-bold text-xs text-slate-400 uppercase tracking-wider pl-1">Chọn Concept:</h3>
-                </div>
+            <div id="templateContainer" class="hidden space-y-3">
+                <p class="text-[10px] font-black text-slate-500 ml-2 uppercase">Chọn mẫu bạn thích:</p>
+                <div id="templateList" class="space-y-2"></div>
+            </div>
             
-            <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl mt-auto">
-                <h2 class="font-bold text-sm text-green-400 mb-3 uppercase tracking-wider">Tùy chọn phụ</h2>
-                <button onclick="addNewText()" class="w-full bg-slate-700 hover:bg-slate-600 py-2 rounded-lg text-xs font-bold transition-all mb-2">+ Thêm khối văn bản</button>
-                <label class="w-full bg-slate-700 hover:bg-slate-600 py-2 rounded-lg text-xs font-bold transition-all flex justify-center cursor-pointer">
-                    📁 Tải ảnh nền thủ công
-                    <input type="file" class="hidden" accept="image/*" onchange="loadCustomImage(event, 'bgImg')">
-                </label>
+            <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800">
+                <h2 class="font-bold text-xs text-green-400 mb-4 uppercase tracking-widest">➕ Thêm yếu tố</h2>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="addNewText()" class="bg-slate-800 hover:bg-slate-700 py-3 rounded-xl text-[10px] font-bold uppercase border border-slate-700">📝 Thêm Chữ</button>
+                    <label class="bg-slate-800 hover:bg-slate-700 py-3 rounded-xl text-[10px] font-bold uppercase border border-slate-700 flex justify-center cursor-pointer">🖼️ Đổi Nền
+                        <input type="file" class="hidden" accept="image/*" onchange="loadCustomImage(event, 'bgImg')">
+                    </label>
+                </div>
             </div>
         </div>
 
         <div id="poster" class="poster-canvas" onclick="deselectAll(event)">
-            <div class="bg-layer"><img id="bgImg" src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1000" crossorigin="anonymous"></div>
+            <div class="bg-layer"><img id="bgImg" src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1000" crossorigin="anonymous"></div>
             <div class="overlay"></div>
 
-            <div id="el-subtitle" class="editable-el" style="top: 80px; left: 0px; width: 100%; text-align: center;">
-                <div contenteditable="true" style="color: #60a5fa; font-size: 14px; letter-spacing: 5px; font-weight: 700;">WE ARE HIRING</div>
+            <div id="el-subtitle" class="editable-el" style="top: 70px; left: 0px; width: 100%; text-align: center;">
+                <div contenteditable="true" style="color: #60a5fa; font-size: 15px; letter-spacing: 6px; font-weight: 700; font-family: 'Be Vietnam Pro';">WE ARE HIRING</div>
             </div>
 
             <div id="el-title" class="editable-el" style="top: 100px; left: 0px; width: 100%; text-align: center;">
-                <div contenteditable="true" style="color: #ffffff; font-size: 48px; font-family: 'Montserrat'; font-weight: 900; line-height: 1.1; text-transform: uppercase;">DESIGNER</div>
+                <div contenteditable="true" style="color: #ffffff; font-size: 55px; font-family: 'Montserrat'; font-weight: 900; line-height: 1; text-transform: uppercase;">YOUR JOB</div>
             </div>
 
-            <div id="el-info" class="editable-el" style="top: 280px; left: 40px; width: 360px; border-left: 4px solid #60a5fa; padding-left: 20px; background: rgba(0,0,0,0);">
-                <div contenteditable="true" style="color: #e2e8f0; font-size: 15px; line-height: 1.8; white-space: pre-line; text-shadow: 1px 1px 2px #000;">
-                    • Yêu cầu 1
-                    • Yêu cầu 2
-                    • Yêu cầu 3
+            <div id="el-info" class="editable-el" style="top: 280px; left: 45px; width: 360px; border-left: 5px solid #60a5fa; padding-left: 20px;">
+                <div contenteditable="true" style="color: #e2e8f0; font-size: 16px; line-height: 1.8; white-space: pre-line; font-family: 'Be Vietnam Pro';">
+                    • Nhập mô tả công việc 1
+                    • Nhập mô tả công việc 2
+                    • Nhập quyền lợi hấp dẫn
                 </div>
             </div>
 
-            <div id="el-salary" class="editable-el" style="top: 460px; left: 0px; background: #2563eb; padding: 15px 40px; border-radius: 0 40px 40px 0;">
-                <div contenteditable="true" style="color: #ffffff; font-size: 26px; font-weight: 900;">15 - 25 TRIỆU</div>
+            <div id="el-salary" class="editable-el" style="top: 480px; left: 0px; background: #2563eb; padding: 15px 45px; border-radius: 0 50px 50px 0;">
+                <div contenteditable="true" style="color: #ffffff; font-size: 26px; font-weight: 900; font-family: 'Oswald';">MỨC LƯƠNG</div>
             </div>
         </div>
 
-        <div class="w-full lg:w-72 bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl hidden lg:block" id="propertiesPanel">
-            <h2 class="font-bold text-sm text-yellow-400 mb-4 uppercase tracking-wider flex items-center gap-2">
-                <span>🎨</span> Điều Chỉnh Chi Tiết
-            </h2>
-            <p id="noSelectMsg" class="text-xs text-slate-500 italic">Nhấp vào một đối tượng trên poster để chỉnh sửa.</p>
+        <div class="w-full lg:w-80 bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-2xl" id="propertiesPanel">
+            <h2 class="font-bold text-xs text-yellow-500 mb-6 uppercase tracking-widest">🛠️ Chỉnh sửa chi tiết</h2>
             
-            <div id="editControls" class="space-y-4 hidden">
+            <div id="noSelectMsg" class="text-xs text-slate-600 italic text-center py-20">Chọn nội dung trên poster để thay đổi font, màu, cỡ...</div>
+            
+            <div id="editControls" class="space-y-6 hidden">
                 <div>
-                    <label class="text-[10px] text-slate-400 uppercase font-bold">Kích thước chữ (px)</label>
-                    <input type="range" id="fontSizeSlider" min="10" max="100" class="w-full mt-1 accent-blue-500" oninput="applyStyle('fontSize', this.value + 'px')">
-                </div>
-                <div>
-                    <label class="text-[10px] text-slate-400 uppercase font-bold">Màu chữ</label>
-                    <div class="flex items-center gap-2 mt-1">
-                        <input type="color" id="colorPicker" class="w-8 h-8 rounded cursor-pointer bg-transparent border-none" oninput="applyStyle('color', this.value)">
-                        <input type="text" id="colorHex" class="flex-1 bg-slate-900 border border-slate-600 rounded p-1 text-xs text-center uppercase" readonly>
+                    <label class="text-[10px] text-slate-500 uppercase font-black block mb-3 italic">Font Chữ Nghệ Thuật</label>
+                    <div class="grid grid-cols-1 gap-1 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+                        <button onclick="applyStyle('fontFamily', 'Montserrat')" class="font-item text-left p-2 rounded text-[11px]" style="font-family: 'Montserrat';">Montserrat (Đậm)</button>
+                        <button onclick="applyStyle('fontFamily', 'Bangers')" class="font-item text-left p-2 rounded text-[11px]" style="font-family: 'Bangers';">Bangers (Cá tính)</button>
+                        <button onclick="applyStyle('fontFamily', 'Dancing Script')" class="font-item text-left p-2 rounded text-[11px]" style="font-family: 'Dancing Script';">Dancing (Viết tay)</button>
+                        <button onclick="applyStyle('fontFamily', 'Pacifico')" class="font-item text-left p-2 rounded text-[11px]" style="font-family: 'Pacifico';">Pacifico (Nghệ thuật)</button>
+                        <button onclick="applyStyle('fontFamily', 'Playfair Display')" class="font-item text-left p-2 rounded text-[11px]" style="font-family: 'Playfair Display';">Playfair (Sang trọng)</button>
+                        <button onclick="applyStyle('fontFamily', 'Oswald')" class="font-item text-left p-2 rounded text-[11px]" style="font-family: 'Oswald';">Oswald (Gọn)</button>
                     </div>
                 </div>
+
                 <div>
-                    <label class="text-[10px] text-slate-400 uppercase font-bold">Màu Nền Khối</label>
-                    <input type="color" id="bgColorPicker" class="w-full h-8 rounded cursor-pointer mt-1 bg-transparent border-none" oninput="applyStyle('background', this.value)">
-                    <button onclick="applyStyle('background', 'transparent')" class="w-full text-[10px] text-slate-400 hover:text-white mt-1 underline">Xóa màu nền</button>
+                    <label class="text-[10px] text-slate-500 uppercase font-black block mb-2">Kích thước: <span id="sizeVal">24</span>px</label>
+                    <input type="range" id="fontSizeSlider" min="10" max="150" class="w-full accent-indigo-500" oninput="document.getElementById('sizeVal').innerText=this.value; applyStyle('fontSize', this.value + 'px')">
                 </div>
-                <div>
-                    <label class="text-[10px] text-slate-400 uppercase font-bold">Màu Viền (Border)</label>
-                    <input type="color" id="borderColorPicker" class="w-full h-8 rounded cursor-pointer mt-1 bg-transparent border-none" oninput="applyStyle('borderColor', this.value)">
-                    <div class="flex gap-1 mt-1">
-                        <button onclick="applyStyle('borderLeft', `4px solid ${document.getElementById('borderColorPicker').value}`)" class="flex-1 bg-slate-700 text-[10px] py-1 rounded hover:bg-slate-600">Viền Trái</button>
-                        <button onclick="applyStyle('border', 'none')" class="flex-1 bg-slate-700 text-[10px] py-1 rounded hover:bg-slate-600">Xóa Viền</button>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] text-slate-500 uppercase font-black block mb-2">Màu Chữ</label>
+                        <input type="color" id="colorPicker" class="w-full h-10 rounded-lg bg-transparent border-none cursor-pointer" oninput="applyStyle('color', this.value)">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-500 uppercase font-black block mb-2">Màu Nền</label>
+                        <input type="color" id="bgColorPicker" class="w-full h-10 rounded-lg bg-transparent border-none cursor-pointer" oninput="applyStyle('background', this.value)">
                     </div>
                 </div>
-                <button onclick="deleteSelected()" class="w-full bg-red-900/50 hover:bg-red-600 text-red-200 py-2 rounded-lg text-xs font-bold transition-all mt-4">🗑️ Xóa đối tượng này</button>
+
+                <div class="pt-6 border-t border-slate-800 flex flex-col gap-2">
+                    <button onclick="applyStyle('background', 'transparent')" class="w-full text-[10px] py-2 text-slate-400 hover:text-white underline">Xóa màu nền khối</button>
+                    <button onclick="deleteSelected()" class="w-full bg-red-950/30 text-red-500 py-3 rounded-xl text-[10px] font-bold hover:bg-red-600 hover:text-white transition-all">🗑️ XÓA PHẦN TỬ</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ==========================================
-        // 1. CẤU HÌNH API VÀ TRẠNG THÁI
-        // ==========================================
-        const API_KEY = "AIzaSyB62ocJefkSAp8LlfD1YhlYMQQ02Tde6mI"; // Thay Key của bạn vào đây
+        // CẤU HÌNH API
+        const API_KEY = "AIzaSyCEL5yP8KwpBv_fDdf34aQZvyKgSRcCbeg"; 
         
         let templatesData = [];
         let selectedElement = null;
-        let elementCounter = 0;
 
-        // ==========================================
-        // 2. KẾT NỐI AI ĐỂ TẠO DỮ LIỆU
-        // ==========================================
+        // 1. HÀM TẠO NỘI DUNG AI
         async function generateTemplates() {
             const jobTitle = document.getElementById('aiJobInput').value.trim();
-            if(!jobTitle) return alert("Vui lòng nhập vị trí tuyển dụng!");
+            if(!jobTitle) return alert("Bạn chưa nhập vị trí tuyển dụng!");
 
             const btn = document.getElementById('btnGenerate');
             const status = document.getElementById('aiStatus');
-            btn.innerHTML = `<span class="loader"></span> Đang tư duy...`;
+            btn.innerHTML = `<span class="loader"></span> ĐANG XỬ LÝ...`;
             btn.disabled = true;
-            status.style.display = 'block';
-            document.getElementById('templateContainer').classList.add('hidden');
 
-            const prompt = `
-            Bạn là giám đốc sáng tạo chuyên thiết kế poster. Người dùng muốn làm poster tuyển dụng vị trí: "${jobTitle}".
-            Hãy nghĩ ra 3 concept thiết kế hoàn toàn khác biệt nhau (Ví dụ: Chuyên nghiệp, Sáng tạo phá cách, Tối giản hiện đại).
-            Trả về CHÍNH XÁC một mảng JSON (không có ký tự markdown, không có \`\`\`), chứa 3 object với cấu trúc sau:
-            [
-              {
-                "themeName": "Tên concept",
-                "bgKeyword": "Từ khóa tiếng anh ngắn gọn miêu tả bối cảnh ảnh nền (ví dụ: minimalist corporate desk, dark neon hacker room, bright hospital room)",
-                "primaryColor": "Mã HEX màu nhấn (ví dụ #3b82f6)",
-                "textColor": "Mã HEX màu chữ (trắng hoặc sáng để dễ đọc trên nền tối)",
-                "title": "Tên chức danh in hoa ngắn gọn",
-                "sub": "WE ARE HIRING",
-                "desc": "• Mô tả 1\\n• Mô tả 2\\n• Mô tả 3",
-                "salary": "Mức lương gợi ý (ví dụ: 15 - 20 TRIỆU)"
-              }
-            ]
-            Chỉ trả về JSON hợp lệ.`;
+            // Dữ liệu dự phòng (Nếu API lỗi vẫn có mẫu đẹp để dùng)
+            const fallback = [
+                { themeName: "Professional Blue", bgKeyword: "modern corporate office", primaryColor: "#2563eb", textColor: "#ffffff", title: jobTitle, sub: "WE ARE HIRING", desc: "• 3+ years experience\n• Great communication\n• Creative mindset", salary: "15 - 25 TRIỆU" },
+                { themeName: "Creative Pink", bgKeyword: "creative studio neon", primaryColor: "#db2777", textColor: "#ffffff", title: jobTitle, sub: "JOIN OUR TEAM", desc: "• Passionate design\n• High responsibility\n• Team player", salary: "COMPETITIVE" },
+                { themeName: "Elegant Dark", bgKeyword: "minimalist dark workspace", primaryColor: "#4f46e5", textColor: "#ffffff", title: jobTitle, sub: "WE WANT YOU", desc: "• Professional skills\n• Innovative thinking\n• Fast learner", salary: "NEGOTIABLE" }
+            ];
 
             try {
                 const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                    body: JSON.stringify({ contents: [{ parts: [{ text: `Create 3 hiring poster concepts for: ${jobTitle}. Return ONLY a JSON array of objects with: themeName, bgKeyword, primaryColor, textColor, title, sub, desc, salary. No prose.` }] }] })
                 });
 
                 const data = await res.json();
-                if(data.error) throw new Error(data.error.message);
+                if(data.error) throw new Error("API Error");
 
-                let rawJson = data.candidates[0].content.parts[0].text;
-                // Làm sạch JSON
-                rawJson = rawJson.replace(/```json|```javascript|```/gi, '').trim();
-                templatesData = JSON.parse(rawJson);
-
-                renderTemplateButtons();
-                status.innerText = "✅ Đã tạo xong 3 mẫu!";
-            } catch (error) {
-                console.error(error);
-                status.innerText = "❌ Lỗi: " + error.message;
+                let raw = data.candidates[0].content.parts[0].text.replace(/```json|```/gi, '').trim();
+                templatesData = JSON.parse(raw);
+                status.innerText = "✅ AI đã tạo xong mẫu!";
+            } catch (e) {
+                console.warn("Dùng mẫu dự phòng.");
+                templatesData = fallback;
+                status.innerHTML = "⚠️ <span class='text-yellow-500'>Dùng mẫu dự phòng (Check API Key)</span>";
             } finally {
-                btn.innerHTML = `✨ TẠO LẠI MẪU KHÁC`;
+                renderTemplates();
+                btn.innerHTML = `✨ TẠO Ý TƯỞNG AI`;
                 btn.disabled = false;
             }
         }
 
-        // ==========================================
-        // 3. HIỂN THỊ VÀ ÁP DỤNG TEMPLATE
-        // ==========================================
-        function renderTemplateButtons() {
-            const container = document.getElementById('templateContainer');
-            container.innerHTML = '<h3 class="font-bold text-xs text-slate-400 uppercase tracking-wider pl-1">Chọn Concept:</h3>';
-            
-            templatesData.forEach((temp, index) => {
-                const btn = document.createElement('button');
-                btn.className = "w-full text-left p-3 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 transition-all flex items-center gap-3 group";
-                btn.onclick = () => applyTemplate(index);
-                btn.innerHTML = `
-                    <div class="w-8 h-8 rounded-full shadow-lg border-2 border-slate-600 group-hover:scale-110 transition-transform" style="background:${temp.primaryColor}"></div>
-                    <div>
-                        <div class="font-bold text-sm text-white">${temp.themeName}</div>
-                        <div class="text-[10px] text-slate-400 truncate">${temp.bgKeyword}</div>
-                    </div>
-                `;
-                container.appendChild(btn);
+        // 2. HIỂN THỊ DANH SÁCH MẪU
+        function renderTemplates() {
+            const list = document.getElementById('templateList');
+            list.innerHTML = '';
+            templatesData.forEach((t, i) => {
+                const b = document.createElement('button');
+                b.className = "w-full p-4 rounded-2xl bg-slate-800/50 border border-slate-700 hover:border-indigo-500 transition-all flex items-center gap-4 text-left group";
+                b.onclick = () => applyTemplate(i);
+                b.innerHTML = `<div class="w-2 h-10 rounded-full" style="background:${t.primaryColor}"></div>
+                               <div><div class="text-[11px] font-bold text-white">${t.themeName}</div><div class="text-[9px] text-slate-500">${t.bgKeyword}</div></div>`;
+                list.appendChild(b);
             });
-            container.classList.remove('hidden');
-            
-            // Tự động áp dụng mẫu đầu tiên
-            if(templatesData.length > 0) applyTemplate(0);
+            document.getElementById('templateContainer').classList.remove('hidden');
+            applyTemplate(0);
         }
 
-        function applyTemplate(index) {
-            const t = templatesData[index];
+        // 3. ÁP DỤNG MẪU VÀO POSTER
+        function applyTemplate(i) {
+            const t = templatesData[i];
+            document.getElementById('bgImg').src = `https://image.pollinations.ai/prompt/${encodeURIComponent(t.bgKeyword)}?width=800&height=1200&nologo=true`;
             
-            // Sinh ảnh từ Pollinations.ai (Hoàn toàn miễn phí, không cần Key)
-            const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(t.bgKeyword)}?width=800&height=1200&nologo=true`;
-            document.getElementById('bgImg').src = imgUrl;
-
-            // Đổ nội dung & Màu sắc
-            const titleEl = document.querySelector('#el-title div');
-            titleEl.innerText = t.title;
-            titleEl.style.color = t.textColor;
-
-            const subEl = document.querySelector('#el-subtitle div');
-            subEl.innerText = t.sub;
-            subEl.style.color = t.primaryColor;
-
-            const infoEl = document.getElementById('el-info');
-            infoEl.querySelector('div').innerText = t.desc;
-            infoEl.style.borderColor = t.primaryColor;
-
-            const salaryEl = document.getElementById('el-salary');
-            salaryEl.querySelector('div').innerText = t.salary;
-            salaryEl.style.background = t.primaryColor;
+            document.querySelector('#el-title div').innerText = t.title.toUpperCase();
+            document.querySelector('#el-subtitle div').innerText = t.sub;
+            document.querySelector('#el-subtitle div').style.color = t.primaryColor;
             
-            deselectAll(); // Bỏ chọn khi đổi mẫu
+            const info = document.getElementById('el-info');
+            info.querySelector('div').innerText = t.desc;
+            info.style.borderColor = t.primaryColor;
+
+            const sal = document.getElementById('el-salary');
+            sal.querySelector('div').innerText = t.salary;
+            sal.style.background = t.primaryColor;
+            deselectAll();
         }
 
-        // ==========================================
-        // 4. HỆ THỐNG KÉO THẢ & CHỌN ĐỐI TƯỢNG (PROPERTIES)
-        // ==========================================
-        function makeDraggableAndSelectable(el) {
-            let isDragging = false, sX, sY, iL, iT;
-            
-            // Xử lý Click để Chọn
+        // 4. HỆ THỐNG KÉO THẢ (DRAG & DROP)
+        function makeDraggable(el) {
+            let isDrag = false, sx, sy, il, it;
             el.addEventListener('mousedown', (e) => {
-                e.stopPropagation(); // Ngăn sự kiện truyền xuống background
                 selectElement(el);
-                
-                if (e.target.isContentEditable) return; // Nếu đang click vào text thì không kéo
-                
-                isDragging = true;
-                sX = e.clientX; sY = e.clientY;
-                iL = el.offsetLeft; iT = el.offsetTop;
+                if (e.target.isContentEditable) return;
+                isDrag = true;
+                sx = e.clientX; sy = e.clientY;
+                il = el.offsetLeft; it = el.offsetTop;
             });
-
             document.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                el.style.left = `${iL + (e.clientX - sX)}px`;
-                el.style.top = `${iT + (e.clientY - sY)}px`;
+                if (!isDrag) return;
+                el.style.left = `${il + (e.clientX - sx)}px`;
+                el.style.top = `${it + (e.clientY - sy)}px`;
             });
-
-            document.addEventListener('mouseup', () => { isDragging = false; });
+            document.addEventListener('mouseup', () => isDrag = false);
         }
+        document.querySelectorAll('.editable-el').forEach(makeDraggable);
 
-        // Áp dụng cho các phần tử có sẵn
-        document.querySelectorAll('.editable-el').forEach(makeDraggableAndSelectable);
-
+        // 5. CHỌN VÀ CHỈNH SỬA THUỘC TÍNH
         function selectElement(el) {
             deselectAll();
             selectedElement = el;
             el.classList.add('selected');
-            
-            // Hiển thị bảng điều khiển
             document.getElementById('noSelectMsg').classList.add('hidden');
             document.getElementById('editControls').classList.remove('hidden');
-
-            // Cập nhật giá trị vào thanh công cụ
-            const innerDiv = el.querySelector('div[contenteditable]');
-            const compStyle = window.getComputedStyle(innerDiv || el);
             
-            document.getElementById('fontSizeSlider').value = parseInt(compStyle.fontSize) || 20;
-            
-            // Đổi rgb sang hex cho color picker
-            const rgbToHex = (rgb) => {
-                let a = rgb.split("(")[1].split(")")[0].split(",");
-                return "#" + a.map(x => {
-                    x = parseInt(x).toString(16); return (x.length==1) ? "0"+x : x;
-                }).join("");
-            };
-            
-            if(innerDiv && compStyle.color.startsWith('rgb')) {
-                const hex = rgbToHex(compStyle.color);
-                document.getElementById('colorPicker').value = hex;
-                document.getElementById('colorHex').value = hex;
-            }
+            const inner = el.querySelector('div[contenteditable]');
+            const style = window.getComputedStyle(inner || el);
+            document.getElementById('fontSizeSlider').value = parseInt(style.fontSize);
+            document.getElementById('sizeVal').innerText = parseInt(style.fontSize);
         }
 
         function deselectAll(e) {
-            // Nếu bấm vào background (không phải phần tử)
-            if(e && e.target.closest('.editable-el')) return; 
-            
+            if(e && e.target.closest('.editable-el')) return;
             document.querySelectorAll('.editable-el').forEach(el => el.classList.remove('selected'));
             selectedElement = null;
             document.getElementById('noSelectMsg').classList.remove('hidden');
             document.getElementById('editControls').classList.add('hidden');
         }
 
-        function applyStyle(property, value) {
+        function applyStyle(p, v) {
             if(!selectedElement) return;
-            const innerDiv = selectedElement.querySelector('div[contenteditable]');
-            
-            if(property === 'color' || property === 'fontSize') {
-                if(innerDiv) innerDiv.style[property] = value;
-                if(property === 'color') document.getElementById('colorHex').value = value;
+            const inner = selectedElement.querySelector('div[contenteditable]');
+            if(['fontSize', 'color', 'fontFamily'].includes(p)) {
+                if(inner) inner.style[p] = v;
             } else {
-                selectedElement.style[property] = value; // background, border...
+                selectedElement.style[p] = v;
             }
         }
 
-        // ==========================================
-        // 5. CÁC TIỆN ÍCH KHÁC (THÊM CHỮ, XÓA, XUẤT ẢNH)
-        // ==========================================
         function addNewText() {
-            elementCounter++;
-            const newEl = document.createElement('div');
-            newEl.className = 'editable-el';
-            newEl.id = 'new-el-' + elementCounter;
-            newEl.style.top = '50px'; newEl.style.left = '50px';
-            newEl.innerHTML = `<div contenteditable="true" style="color: #ffffff; font-size: 20px; font-weight: bold; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 4px;">Nhập chữ mới...</div>`;
-            
-            document.getElementById('poster').appendChild(newEl);
-            makeDraggableAndSelectable(newEl);
-            selectElement(newEl);
+            const n = document.createElement('div');
+            n.className = 'editable-el';
+            n.style.top = '150px'; n.style.left = '50px';
+            n.innerHTML = `<div contenteditable="true" style="color:#ffffff; font-size:24px; font-weight:bold; font-family:'Montserrat';">NỘI DUNG MỚI...</div>`;
+            document.getElementById('poster').appendChild(n);
+            makeDraggable(n);
+            selectElement(n);
         }
 
-        function deleteSelected() {
-            if(!selectedElement) return;
-            selectedElement.remove();
-            deselectAll();
-        }
+        function deleteSelected() { if(selectedElement) { selectedElement.remove(); deselectAll(); } }
 
-        function loadCustomImage(event, targetId) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => document.getElementById(targetId).src = e.target.result;
-                reader.readAsDataURL(file); 
-            }
+        function loadCustomImage(e, id) {
+            const f = e.target.files[0];
+            if(f) { const r = new FileReader(); r.onload = (ev) => document.getElementById(id).src = ev.target.result; r.readAsDataURL(f); }
         }
 
         function downloadPoster() {
-            deselectAll(); // Bỏ viền xanh trước khi chụp
-            const p = document.getElementById('poster');
-            
-            html2canvas(p, { scale: 3, useCORS: true, backgroundColor: "#1e293b" }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `Studio_Poster_${Date.now()}.png`;
-                link.href = canvas.toDataURL("image/png");
-                link.click();
-            }).catch(err => alert("Lỗi tải ảnh do trình duyệt chặn CORS (ảnh từ mạng). Hãy dùng nút 'Tải ảnh nền thủ công' để thay ảnh."));
+            deselectAll();
+            const btn = event.target;
+            btn.innerText = "ĐANG XỬ LÝ...";
+            html2canvas(document.getElementById('poster'), { scale: 3, useCORS: true }).then(c => {
+                const l = document.createElement('a');
+                l.download = `AI_Poster_${Date.now()}.png`;
+                l.href = c.toDataURL("image/png");
+                l.click();
+                btn.innerText = "📸 XUẤT ẢNH 4K";
+            });
         }
     </script>
 </body>
