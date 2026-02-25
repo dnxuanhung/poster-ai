@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Recruitment Poster Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Be+Vietnam+Pro:wght@400;700&family=Oswald:wght@700&family=Playfair+Display:wght@900&display=swap" rel="stylesheet">
+    <style>
+        :root { --p-width: 450px; --p-height: 630px; }
+        body { background: #0f172a; color: #f8fafc; font-family: 'Be Vietnam Pro', sans-serif; }
+        .poster-canvas { 
+            width: var(--p-width); height: var(--p-height); 
+            background: #000; position: relative; overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+        }
+        .draggable { position: absolute; cursor: move; transition: color 0.3s, background 0.3s; }
+        .draggable:hover { outline: 1px dashed #3b82f6; }
+        .bg-layer { position: absolute; inset: 0; z-index: 0; }
+        .bg-layer img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8)); z-index: 1; }
+        [contenteditable="true"] { outline: none; border-radius: 4px; }
+        [contenteditable="true"]:focus { background: rgba(255,255,255,0.1); padding: 0 5px; }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col md:flex-row justify-center items-start gap-8">
+
+    <div class="w-full md:w-[400px] space-y-6 bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+        <header>
+            <h1 class="text-xl font-black italic text-blue-400">RECRUIT AI PRO v2</h1>
+            <p class="text-xs text-slate-400">Tự động hóa thiết kế tuyển dụng theo ngành nghề.</p>
+        </header>
+
+        <div class="space-y-4">
+            <div>
+                <label class="text-[10px] font-bold text-slate-400 uppercase">1. Chức danh công việc (AI nhận diện)</label>
+                <input type="text" id="jobTitleInp" placeholder="Ví dụ: Lập trình viên, Bán hàng..." 
+                       class="w-full bg-slate-900 border border-slate-700 p-3 rounded-lg mt-1 focus:ring-2 focus:ring-blue-500 outline-none"
+                       oninput="updateText('jobTitle', this.value); triggerAI(this.value)">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">Mức lương</label>
+                    <input type="text" id="salaryInp" placeholder="15 - 20 Triệu" 
+                           class="w-full bg-slate-900 border border-slate-700 p-2 rounded mt-1 text-sm outline-none"
+                           oninput="updateText('salaryVal', this.value)">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">Logo công ty</label>
+                    <input type="file" id="logoInp" class="hidden" accept="image/*" onchange="loadLogo(event)">
+                    <button onclick="document.getElementById('logoInp').click()" class="w-full bg-slate-700 p-2 rounded mt-1 text-xs font-bold hover:bg-slate-600">📁 Tải Logo</button>
+                </div>
+            </div>
+
+            <div>
+                <label class="text-[10px] font-bold text-slate-400 uppercase">Yêu cầu / Quyền lợi</label>
+                <textarea id="descInp" rows="3" class="w-full bg-slate-900 border border-slate-700 p-2 rounded mt-1 text-sm outline-none" 
+                          placeholder="• Kinh nghiệm 1 năm..." oninput="updateText('jobDesc', this.value)"></textarea>
+            </div>
+            
+            <button onclick="addField()" class="text-[11px] text-blue-400 font-bold hover:underline">+ Thêm trường thông tin khác</button>
+        </div>
+
+        <div class="pt-4 border-t border-slate-700 flex gap-2">
+            <button onclick="downloadPoster()" class="flex-1 bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-900/20">TẢI ẢNH 4K</button>
+            <button onclick="resetAI()" class="bg-slate-700 px-4 rounded-xl hover:bg-slate-600">🔄</button>
+        </div>
+    </div>
+
+    <div id="poster" class="poster-canvas">
+        <div class="bg-layer">
+            <img id="bgImg" src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1000">
+        </div>
+        <div id="overlay" class="overlay"></div>
+
+        <div id="groupLogo" class="draggable" style="top: 30px; left: 30px; width: 60px;">
+            <img id="logoPreview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3C/svg%3E" class="w-full">
+        </div>
+
+        <div id="groupHeader" class="draggable text-center" style="top: 80px; left: 0; width: 100%;">
+            <p id="subTitle" style="font-size: 14px; letter-spacing: 4px; color: #3b82f6; font-weight: 900;">WE ARE HIRING</p>
+            <h1 id="jobTitle" contenteditable="true" style="font-size: 48px; font-family: 'Montserrat'; font-weight: 900; line-height: 1.1; margin-top: 5px;">CHỨC DANH</h1>
+        </div>
+
+        <div id="groupInfo" class="draggable" style="top: 250px; left: 40px; width: 370px; border-left: 4px solid #3b82f6; padding-left: 20px;">
+            <p style="font-size: 12px; opacity: 0.8; margin-bottom: 5px; font-weight: bold;">YÊU CẦU & MÔ TẢ:</p>
+            <div id="jobDesc" contenteditable="true" style="font-size: 15px; line-height: 1.6; white-space: pre-line;">
+                • Có tinh thần trách nhiệm cao
+                • Kỹ năng giao tiếp tốt
+                • Ham học hỏi, năng động
+            </div>
+        </div>
+
+        <div id="groupSalary" class="draggable" style="top: 420px; left: 40px; background: #3b82f6; padding: 15px 30px; border-radius: 0 50px 50px 0;">
+            <p style="font-size: 10px; font-weight: bold; margin-bottom: 2px;">MỨC LƯƠNG HẤP DẪN</p>
+            <span id="salaryVal" contenteditable="true" style="font-size: 24px; font-weight: 900;">THỎA THUẬN</span>
+        </div>
+
+        <div id="groupFooter" class="draggable text-center" style="top: 560px; left: 0; width: 100%;">
+            <p id="contactInfo" contenteditable="true" style="font-size: 12px; opacity: 0.7;">📍 123 Đường ABC, Quận 1, TP. HCM | 📞 0123 456 789</p>
+        </div>
+    </div>
+
+    <script>
+        // --- AI LOGIC: CƠ SỞ DỮ LIỆU NGÀNH NGHỀ ---
+        const AI_THEMES = {
+            tech: {
+                keywords: ['it', 'dev', 'code', 'lập trình', 'software', 'data', 'kỹ thuật'],
+                bg: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1000',
+                color: '#3b82f6', // Xanh công nghệ
+                font: 'Montserrat'
+            },
+            creative: {
+                keywords: ['design', 'marketing', 'sáng tạo', 'video', 'ảnh', 'art', 'designer'],
+                bg: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
+                color: '#f43f5e', // Hồng đỏ sáng tạo
+                font: 'Playfair Display'
+            },
+            office: {
+                keywords: ['kế toán', 'nhân sự', 'admin', 'văn phòng', 'trợ lý', 'luật'],
+                bg: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1000',
+                color: '#0ea5e9', // Xanh thanh lịch
+                font: 'Be Vietnam Pro'
+            },
+            sale: {
+                keywords: ['bán hàng', 'sales', 'tư vấn', 'kinh doanh', 'chốt đơn'],
+                bg: 'https://images.unsplash.com/photo-1556740734-7f9a2b7a0f42?auto=format&fit=crop&q=80&w=1000',
+                color: '#f59e0b', // Vàng cam năng lượng
+                font: 'Oswald'
+            }
+        };
+
+        function triggerAI(val) {
+            const input = val.toLowerCase();
+            let selectedTheme = null;
+
+            for (let key in AI_THEMES) {
+                if (AI_THEMES[key].keywords.some(k => input.includes(k))) {
+                    selectedTheme = AI_THEMES[key];
+                    break;
+                }
+            }
+
+            if (selectedTheme) {
+                applyTheme(selectedTheme);
+            }
+        }
+
+        function applyTheme(theme) {
+            document.getElementById('bgImg').src = theme.bg;
+            document.getElementById('subTitle').style.color = theme.color;
+            document.getElementById('groupSalary').style.background = theme.color;
+            document.getElementById('groupInfo').style.borderColor = theme.color;
+            document.getElementById('jobTitle').style.fontFamily = theme.font;
+        }
+
+        // --- HÀM HỖ TRỢ ---
+        function updateText(id, val) {
+            document.getElementById(id).innerText = val || "NỘI DUNG";
+        }
+
+        function loadLogo(e) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                document.getElementById('logoPreview').src = reader.result;
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        }
+
+        function addField() {
+            const newId = 'field_' + Date.now();
+            const div = document.createElement('div');
+            div.id = newId;
+            div.className = 'draggable';
+            div.style.top = '500px';
+            div.style.left = '40px';
+            div.style.width = '300px';
+            div.innerHTML = `<p contenteditable="true" style="font-size:13px; font-weight:bold; color:white;">+ Thông tin bổ sung (Nhấp để sửa)</p>`;
+            document.getElementById('poster').appendChild(div);
+            initDraggable();
+        }
+
+        // --- DRAG & DROP LOGIC ---
+        function initDraggable() {
+            document.querySelectorAll('.draggable').forEach(el => {
+                el.onmousedown = function(e) {
+                    if (e.target.contentEditable === 'true') return;
+                    let shiftX = e.clientX - el.getBoundingClientRect().left;
+                    let shiftY = e.clientY - el.getBoundingClientRect().top;
+                    
+                    document.onmousemove = function(e) {
+                        let pRect = document.getElementById('poster').getBoundingClientRect();
+                        el.style.left = (e.clientX - pRect.left - shiftX) + 'px';
+                        el.style.top = (e.clientY - pRect.top - shiftY) + 'px';
+                    };
+                    document.onmouseup = function() { document.onmousemove = null; };
+                };
+            });
+        }
+        initDraggable();
+
+        function downloadPoster() {
+            const poster = document.getElementById('poster');
+            html2canvas(poster, { scale: 3, useCORS: true }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'AI_Recruitment_Poster.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+
+        function resetAI() { location.reload(); }
+    </script>
+</body>
+</html>
