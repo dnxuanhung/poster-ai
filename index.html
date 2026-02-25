@@ -3,136 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Poster V13 - Marketing Expert Edition</title>
+    <title>Recruitment Poster V14 - Da Nang Job Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Be+Vietnam+Pro:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Be+Vietnam+Pro:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --p-width: 500px; --p-height: 700px; --accent: #3b82f6; }
-        body { background: #020617; color: #f1f5f9; font-family: 'Be Vietnam Pro', sans-serif; }
-        
-        /* UI Form */
+        :root { --accent: #2563eb; --accent-soft: rgba(37, 99, 235, 0.15); }
+        body { background: #020617; color: #f1f5f9; font-family: 'Be Vietnam Pro', sans-serif; overflow: hidden; }
         .sidebar { width: 450px; background: #0f172a; border-right: 1px solid #1e293b; padding: 25px; height: 100vh; overflow-y: auto; }
         .form-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 15px; margin-bottom: 12px; }
-        .label-v { font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 6px; display: block; }
+        .label-v { font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; display: block; }
         input, textarea { width: 100%; background: #0f172a; border: 1px solid #334155; color: white; font-size: 13px; padding: 10px; border-radius: 8px; outline: none; transition: 0.3s; }
         input:focus { border-color: var(--accent); }
 
-        /* Poster Engine */
-        #poster { width: var(--p-width); height: var(--p-height); background: #000; position: relative; overflow: hidden; display: flex; flex-direction: column; }
-        .p-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.95) 20%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.7) 100%); z-index: 1; }
-        .p-body { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; padding: 45px; }
+        /* Poster Canvas */
+        #poster { width: 500px; height: 700px; background: #000; position: relative; overflow: hidden; color: white; transition: all 0.5s ease; }
+        .p-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-cover: cover; transition: 1s; }
+        .p-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.9) 100%); z-index: 1; }
+        .p-layer { position: relative; z-index: 10; height: 100%; display: flex; flex-direction: column; padding: 40px; }
         
-        /* Typography */
-        .job-title { font-family: 'Montserrat'; line-height: 1; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .section-text { font-size: 12px; line-height: 1.6; color: rgba(255,255,255,0.85); }
-        .accent-text { color: var(--accent); }
+        /* Layout Styles */
+        .layout-1 .info-grid { display: grid; grid-template-cols: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .layout-2 .info-grid { display: block; space-y: 10px; margin-top: 20px; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; backdrop-filter: blur(10px); }
+        .layout-3 .info-grid { display: grid; grid-template-cols: 1fr; gap: 20px; margin-top: 20px; }
 
+        .job-title { font-family: 'Montserrat'; line-height: 1; letter-spacing: -2px; }
         .custom-scroll::-webkit-scrollbar { width: 5px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; }
     </style>
 </head>
 <body class="flex">
 
     <aside class="sidebar custom-scroll">
         <div class="mb-6">
-            <h1 class="text-2xl font-black italic tracking-tighter text-white">STUDIO <span class="text-blue-500">PRO</span></h1>
-            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-[3px]">Marketing Framework V13</p>
+            <h1 class="text-xl font-black text-white">RECRUITMENT <span class="text-blue-500">DA NANG</span></h1>
+            <p class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Job Center Professional Hub</p>
         </div>
 
         <div class="form-card">
-            <label class="label-v text-blue-400">Vị trí & Thương hiệu</label>
-            <input type="text" id="inJob" placeholder="Vị trí tuyển dụng..." oninput="sync()" class="mb-3">
+            <label class="label-v">Vị trí cần tuyển</label>
             <div class="flex gap-2">
-                <input type="text" id="inCompany" placeholder="Tên công ty/Thương hiệu..." oninput="sync()">
-                <button onclick="suggest()" class="bg-blue-600 px-4 rounded-lg font-bold text-xs">AI SUGGEST</button>
+                <input type="text" id="inJob" placeholder="Vd: Nhân viên Kỹ thuật..." oninput="sync()">
+                <button onclick="suggest()" class="bg-blue-600 px-3 rounded-lg font-bold text-[10px]">AI SUGGEST</button>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-2 mb-3">
-            <div class="form-card m-0">
-                <label class="label-v">Mức lương</label>
-                <input type="text" id="inSalary" placeholder="Vd: 15 - 20 Triệu" oninput="sync()">
-            </div>
-            <div class="form-card m-0">
-                <label class="label-v">Số lượng</label>
-                <input type="text" id="inQty" placeholder="Vd: 05 Nhân viên" oninput="sync()">
-            </div>
+            <div class="form-card m-0"><label class="label-v">Mức lương</label><input type="text" id="inSalary" oninput="sync()"></div>
+            <div class="form-card m-0"><label class="label-v">Số lượng</label><input type="text" id="inQty" oninput="sync()"></div>
         </div>
 
         <div class="form-card">
-            <label class="label-v">Mô tả & Yêu cầu (Gợi ý dùng dấu gạch ngang)</label>
-            <textarea id="inDesc" rows="3" class="mb-2" oninput="sync()"></textarea>
-            <textarea id="inReq" rows="3" oninput="sync()"></textarea>
+            <label class="label-v">Nội dung chi tiết</label>
+            <textarea id="inDesc" rows="3" class="mb-2" placeholder="Mô tả công việc..." oninput="sync()"></textarea>
+            <textarea id="inReq" rows="3" placeholder="Yêu cầu & Quyền lợi..." oninput="sync()"></textarea>
         </div>
 
-        <div class="form-card">
-            <label class="label-v">Thông tin liên hệ (Hotline)</label>
-            <input type="text" id="inPhone" placeholder="Số điện thoại hoặc Zalo..." oninput="sync()" class="text-lg font-bold">
+        <div class="form-card border-l-4 border-blue-500">
+            <label class="label-v">Thông tin liên hệ (Zalo/SĐT)</label>
+            <input type="text" id="inPhone" placeholder="09xx.xxx.xxx" oninput="sync()" class="font-bold text-blue-400">
         </div>
 
-        <div class="form-card bg-slate-800">
-            <label class="label-v text-amber-400">Hình ảnh & Thương hiệu</label>
-            <div class="grid grid-cols-2 gap-2 mb-3">
-                <button onclick="document.getElementById('logoIn').click()" class="bg-slate-700 p-2 rounded text-[10px] font-bold">+ TẢI LOGO</button>
-                <button onclick="document.getElementById('bgIn').click()" class="bg-slate-700 p-2 rounded text-[10px] font-bold">+ TẢI NỀN</button>
-            </div>
-            <button onclick="randomAI()" class="w-full bg-indigo-600 p-2 rounded text-[10px] font-bold mb-3">🤖 AI GENERATE BACKGROUND</button>
-            <div class="flex items-center justify-between">
-                <span class="text-[10px] font-bold uppercase">Màu thương hiệu:</span>
-                <input type="color" id="themeColor" value="#3b82f6" oninput="updateTheme()" class="w-10 h-10 bg-transparent cursor-pointer">
-            </div>
+        <div class="flex gap-2 mb-4">
+            <button onclick="document.getElementById('logoIn').click()" class="flex-1 bg-slate-700 py-2 rounded text-[10px] font-bold">📁 LOGO</button>
+            <button onclick="document.getElementById('bgIn').click()" class="flex-1 bg-slate-700 py-2 rounded text-[10px] font-bold">🖼️ NỀN</button>
+            <input type="color" id="themeColor" value="#2563eb" oninput="updateTheme()" class="w-12 h-9 bg-transparent cursor-pointer">
         </div>
 
-        <button onclick="smartLayout()" class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase mb-3 hover:bg-blue-400 hover:text-white transition-all">✨ Sắp xếp chuyên nghiệp</button>
-        <button onclick="download()" class="w-full bg-blue-600 py-4 rounded-xl font-black text-sm uppercase shadow-xl shadow-blue-900/40">Xuất Poster 4K</button>
+        <button onclick="randomAI()" class="w-full bg-indigo-600 py-3 rounded-xl font-bold text-xs mb-3">🤖 SINH HÌNH NỀN AI</button>
+        <button onclick="smartLayout()" class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase mb-3 hover:bg-blue-500 hover:text-white transition-all">✨ ĐỔI LAYOUT CHUYÊN NGHIỆP</button>
+        <button onclick="download()" class="w-full bg-blue-600 py-4 rounded-xl font-black text-sm uppercase shadow-xl">XUẤT POSTER 4K</button>
         
-        <input type="file" id="logoIn" class="hidden" accept="image/*" onchange="loadImg(event, 'pLogo')">
-        <input type="file" id="bgIn" class="hidden" accept="image/*" onchange="loadImg(event, 'pBg')">
+        <input type="file" id="logoIn" class="hidden" onchange="loadImg(event, 'pLogo')">
+        <input type="file" id="bgIn" class="hidden" onchange="loadImg(event, 'pBg')">
     </aside>
 
-    <main class="flex-1 flex items-center justify-center p-6">
-        <div id="poster">
-            <img id="pBg" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200" class="absolute inset-0 w-full h-full object-cover" crossorigin="anonymous">
+    <main class="flex-1 flex items-center justify-center p-6 bg-slate-950">
+        <div id="poster" class="layout-1">
+            <img id="pBg" src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1200" class="p-bg" crossorigin="anonymous">
             <div class="p-overlay"></div>
             
-            <div class="p-body">
-                <div id="headerPart" class="flex items-center gap-4 mb-10 transition-all duration-500">
-                    <img id="pLogo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E" class="w-12 h-12 object-contain filter drop-shadow-lg">
-                    <div id="outCompany" class="text-sm font-bold tracking-[2px] uppercase">YOUR BRAND NAME</div>
-                </div>
-
-                <div class="mb-10">
-                    <p class="text-[11px] font-bold uppercase tracking-[4px] opacity-70 mb-2">We Are Hiring</p>
-                    <h1 id="outJob" class="job-title text-6xl font-black uppercase text-white">MARKETING SPECIALIST</h1>
-                </div>
-
-                <div id="detailsRow" class="flex gap-10 mb-10">
-                    <div class="border-l-2 border-l-[var(--accent)] pl-4">
-                        <p class="text-[9px] uppercase font-bold text-slate-400">Mức lương hấp dẫn</p>
-                        <p id="outSalary" class="text-xl font-black">15 - 25 TRIỆU</p>
+            <div class="p-layer">
+                <div class="flex items-start justify-between mb-8">
+                    <div class="flex items-center gap-3">
+                        <img id="pLogo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E" class="w-12 h-12 object-contain">
+                        <div class="border-l border-white/30 pl-3">
+                            <h3 class="text-[10px] font-black tracking-tighter uppercase leading-tight">Trung tâm Dịch vụ việc làm<br><span class="text-blue-400">Thành phố Đà Nẵng</span></h3>
+                        </div>
                     </div>
-                    <div class="border-l-2 border-l-white/30 pl-4">
-                        <p class="text-[9px] uppercase font-bold text-slate-400">Số lượng</p>
-                        <p id="outQty" class="text-xl font-black">-- NGƯỜI</p>
+                    <div class="bg-blue-600 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest">Hiring Now</div>
+                </div>
+
+                <div class="mb-6">
+                    <h1 id="outJob" class="job-title text-5xl font-black uppercase italic">Vị Trí Tuyển Dụng</h1>
+                    <div class="h-2 w-24 bg-blue-600 mt-2"></div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-8">
+                    <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border-l-4 border-blue-500">
+                        <p class="text-[8px] uppercase font-bold text-blue-400 mb-1">Mức lương dự kiến</p>
+                        <p id="outSalary" class="text-lg font-black italic">Thỏa thuận</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border-l-4 border-white">
+                        <p class="text-[8px] uppercase font-bold text-slate-400 mb-1">Chỉ tiêu tuyển</p>
+                        <p id="outQty" class="text-lg font-black italic">-- Người</p>
                     </div>
                 </div>
 
-                <div id="mainContent" class="space-y-6 flex-1">
+                <div class="info-grid flex-1">
+                    <div class="content-block">
+                        <h4 class="text-[10px] font-black uppercase text-blue-400 mb-2 flex items-center gap-2">
+                            <span class="w-4 h-[1px] bg-blue-400"></span> Mô tả công việc
+                        </h4>
+                        <p id="outDesc" class="text-[11px] leading-relaxed text-slate-200 pl-6">AI đang sẵn sàng hỗ trợ nội dung cho bạn...</p>
+                    </div>
+                    <div class="content-block mt-4">
+                        <h4 class="text-[10px] font-black uppercase text-blue-400 mb-2 flex items-center gap-2">
+                            <span class="w-4 h-[1px] bg-blue-400"></span> Yêu cầu & Quyền lợi
+                        </h4>
+                        <p id="outReq" class="text-[11px] leading-relaxed text-slate-200 pl-6">Chạm nút AI Suggest để điền mẫu chuyên nghiệp...</p>
+                    </div>
+                </div>
+
+                <div class="mt-auto flex items-center justify-between pt-6 border-t border-white/10">
                     <div>
-                        <h4 class="text-[10px] font-black uppercase tracking-widest text-[var(--accent)] mb-2 italic">/ Mô tả công việc</h4>
-                        <p id="outDesc" class="section-text pl-4">Nghiên cứu thị trường và lập kế hoạch chiến dịch quảng cáo đa kênh...</p>
+                        <p class="text-[8px] uppercase tracking-widest text-slate-400">Thông tin liên hệ</p>
+                        <p id="outPhone" class="text-3xl font-black tracking-tighter text-blue-500">0236.XXX.XXXX</p>
                     </div>
-                    <div>
-                        <h4 class="text-[10px] font-black uppercase tracking-widest text-[var(--accent)] mb-2 italic">/ Yêu cầu & Quyền lợi</h4>
-                        <p id="outReq" class="section-text pl-4">Có tối thiểu 2 năm kinh nghiệm ở vị trí tương đương...</p>
-                    </div>
-                </div>
-
-                <div id="footerPart" class="mt-auto pt-6 border-t border-white/20 flex justify-between items-end">
-                    <div>
-                        <p class="text-[8px] uppercase tracking-widest opacity-60 mb-1">Apply via Hotline / Zalo</p>
-                        <p id="outPhone" class="text-3xl font-black tracking-tighter text-[var(--accent)]">090.XXX.XXXX</p>
+                    <div class="text-right">
+                        <p class="text-[8px] font-bold uppercase py-1 px-3 bg-white text-black rounded">Quét để ứng tuyển</p>
                     </div>
                 </div>
             </div>
@@ -140,79 +139,71 @@
     </main>
 
     <script>
-        // AI CONTENT REPOSITORY
-        const aiRepo = {
-            "sale": { d: "- Tìm kiếm và khai thác khách hàng tiềm năng\n- Tư vấn giải pháp và chốt hợp đồng\n- Chăm sóc khách hàng sau bán hàng", r: "- Giao tiếp tự tin, đàm phán tốt\n- Chịu được áp lực doanh số\n- Thưởng % hoa hồng cao + Du lịch" },
-            "kế toán": { d: "- Quản lý dòng tiền, thu chi nội bộ\n- Lập báo cáo thuế, báo cáo tài chính\n- Kiểm soát chứng từ, hóa đơn", r: "- Tốt nghiệp chuyên ngành Tài chính/KT\n- Sử dụng tốt phần mềm MISA/Excel\n- Tính tình cẩn thận, trung thực" },
-            "nhân sự": { d: "- Tuyển dụng và đào tạo nhân sự mới\n- Xây dựng văn hóa doanh nghiệp\n- Quản lý hồ sơ, bảo hiểm, lương thưởng", r: "- Hiểu biết về luật lao động\n- Khả năng kết nối, thấu hiểu con người\n- Thưởng lễ tết, BHXH đầy đủ" },
-            "it": { d: "- Phát triển và bảo trì hệ thống Website\n- Xử lý lỗi và tối ưu hóa trải nghiệm\n- Nghiên cứu các công nghệ mới áp dụng", r: "- Am hiểu JavaScript, React, hoặc PHP\n- Tư duy logic tốt, tiếng Anh cơ bản\n- Lương thỏa thuận theo năng lực" },
-            "thiết kế": { d: "- Thiết kế ấn phẩm Marketing (Banner, Poster)\n- Xây dựng bộ nhận diện thương hiệu\n- Phối hợp với team content triển khai ý tưởng", r: "- Thành thạo Photoshop, AI, Canva\n- Thẩm mỹ tốt, sáng tạo không giới hạn\n- Môi trường làm việc trẻ trung" }
+        const aiLib = {
+            "kế toán": { d: "• Thực hiện thu chi, báo cáo tài chính nội bộ\n• Kiểm soát hóa đơn, chứng từ thuế\n• Theo dõi công nợ khách hàng", r: "• Tốt nghiệp chuyên ngành Kế toán/Kiểm toán\n• Thành thạo Excel và phần mềm MISA\n• Trung thực, chịu khó, cẩn thận" },
+            "sale": { d: "• Tìm kiếm và mở rộng mạng lưới khách hàng\n• Tư vấn sản phẩm, giải pháp kỹ thuật\n• Đàm phán và ký kết hợp đồng kinh tế", r: "• Kỹ năng giao tiếp và thuyết phục tốt\n• Chịu được áp lực doanh số cao\n• Thu nhập hấp dẫn (Lương cứng + % Hoa hồng)" },
+            "kỹ sư": { d: "• Thiết kế bản vẽ, giám sát thi công công trình\n• Lập dự toán báo giá cho khách hàng\n• Xử lý các vấn đề kỹ thuật tại hiện trường", r: "• Bằng đại học chuyên ngành kỹ thuật\n• Sử dụng tốt AutoCad, SolidWorks\n• Có khả năng đi công tác xa khi cần" },
+            "lái xe": { d: "• Vận chuyển hàng hóa theo đúng lịch trình\n• Bảo quản và kiểm tra định kỳ xe\n• Hỗ trợ bốc dỡ hàng hóa khi cần thiết", r: "• Có bằng lái B2 trở lên, sức khỏe tốt\n• Am hiểu luật giao thông và các tuyến đường\n• Có trách nhiệm, không sử dụng chất kích thích" },
+            "bảo vệ": { d: "• Trực gác, tuần tra bảo vệ tài sản công ty\n• Kiểm soát người và phương tiện ra vào\n• Xử lý các tình huống khẩn cấp, PCCC", r: "• Nam từ 18-55 tuổi, ngoại hình dễ nhìn\n• Nhanh nhẹn, trung thực, lịch sự\n• Có chứng chỉ bảo vệ là một lợi thế" },
+            "nấu ăn": { d: "• Chế biến món ăn theo thực đơn hàng ngày\n• Đảm bảo vệ sinh an toàn thực phẩm\n• Quản lý nguyên liệu và vật dụng bếp", r: "• Có chứng chỉ nghề nấu ăn hoặc kinh nghiệm\n• Sạch sẽ, có tâm với nghề\n• Làm việc theo ca linh hoạt" },
+            "marketing": { d: "• Quản lý các trang mạng xã hội công ty\n• Lên ý tưởng chiến dịch quảng bá hình ảnh\n• Theo dõi và báo cáo hiệu quả truyền thông", r: "• Sáng tạo, am hiểu các nền tảng số\n• Biết thiết kế cơ bản là một lợi thế\n• Năng động, thích ứng nhanh" }
         };
 
         function suggest() {
             const job = document.getElementById('inJob').value.toLowerCase();
-            for (let key in aiRepo) {
+            let found = false;
+            for (let key in aiLib) {
                 if (job.includes(key)) {
-                    document.getElementById('inDesc').value = aiRepo[key].d;
-                    document.getElementById('inReq').value = aiRepo[key].r;
-                    sync(); return;
+                    document.getElementById('inDesc').value = aiLib[key].d;
+                    document.getElementById('inReq').value = aiLib[key].r;
+                    found = true; break;
                 }
             }
-            alert("Vị trí này AI sẽ cập nhật thêm. Bạn có thể tự nhập để chuyên nghiệp hơn!");
+            if(!found) alert("Vị trí này AI đang học thêm. Bạn hãy tự nhập nhé!");
+            sync();
         }
 
         function sync() {
-            const map = { inJob:'outJob', inSalary:'outSalary', inQty:'outQty', inDesc:'outDesc', inReq:'outReq', inCompany:'outCompany', inPhone:'outPhone' };
+            const map = { inJob:'outJob', inSalary:'outSalary', inQty:'outQty', inDesc:'outDesc', inReq:'outReq', inPhone:'outPhone' };
             for (let i in map) {
-                let val = document.getElementById(i).value;
-                document.getElementById(map[i]).innerText = val || "...";
+                document.getElementById(map[i]).innerText = document.getElementById(i).value || "...";
             }
         }
 
         function updateTheme() {
             const color = document.getElementById('themeColor').value;
             document.documentElement.style.setProperty('--accent', color);
+            document.querySelectorAll('.text-blue-400, .text-blue-500').forEach(el => el.style.color = color);
+            document.querySelectorAll('.bg-blue-600').forEach(el => el.style.backgroundColor = color);
+            document.querySelectorAll('.border-blue-500').forEach(el => el.style.borderColor = color);
         }
 
-        function loadImg(e, targetId) {
-            const reader = new FileReader();
-            reader.onload = (ev) => { document.getElementById(targetId).src = ev.target.result; };
-            reader.readAsDataURL(e.target.files[0]);
+        function loadImg(e, tid) {
+            const r = new FileReader();
+            r.onload = (ev) => { document.getElementById(tid).src = ev.target.result; };
+            r.readAsDataURL(e.target.files[0]);
         }
 
         function randomAI() {
-            const job = document.getElementById('inJob').value || "Office";
+            const j = document.getElementById('inJob').value || "Office";
             const img = document.getElementById('pBg');
-            img.style.opacity = '0.3';
-            img.src = `https://image.pollinations.ai/prompt/${encodeURIComponent(job + ' modern workspace cinematic lighting dark background')}?width=1000&height=1400&nologo=true&seed=${Math.random()}`;
+            img.style.opacity = '0.2';
+            img.src = `https://image.pollinations.ai/prompt/${encodeURIComponent(j + ' Da Nang city modern professional background dark vibe')}?width=1000&height=1400&nologo=true&seed=${Math.random()}`;
             img.onload = () => img.style.opacity = '1';
         }
 
-        // CHUYÊN GIA MARKETING SẮP XẾP LẠI BỐ CỤC
         function smartLayout() {
-            const body = document.querySelector('.p-body');
-            const layouts = [
-                () => { // Layout 1: Classic Left
-                    body.style.alignItems = 'flex-start';
-                    body.style.textAlign = 'left';
-                    document.getElementById('headerPart').style.flexDirection = 'row';
-                },
-                () => { // Layout 2: Modern Center
-                    body.style.alignItems = 'center';
-                    body.style.textAlign = 'center';
-                    document.getElementById('headerPart').style.flexDirection = 'column';
-                }
-            ];
-            const current = parseInt(body.getAttribute('data-layout') || 0);
-            const next = (current + 1) % layouts.length;
-            layouts[next]();
-            body.setAttribute('data-layout', next);
+            const p = document.getElementById('poster');
+            const current = p.className;
+            if(current.includes('layout-1')) p.className = 'layout-2';
+            else if(current.includes('layout-2')) p.className = 'layout-3';
+            else p.className = 'layout-1';
         }
 
         async function download() {
             const canvas = await html2canvas(document.getElementById('poster'), { scale: 3, useCORS: true });
             const link = document.createElement('a');
-            link.download = `Tuyendung_${document.getElementById('outJob').innerText}.png`;
+            link.download = `Tuyendung_DaNang_${Date.now()}.png`;
             link.href = canvas.toDataURL();
             link.click();
         }
